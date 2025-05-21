@@ -1,0 +1,43 @@
+services:
+  backend:
+    build:
+      context: ./back
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/virt_health
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=KiraWi
+
+  nginx:
+    build:
+      context: ./front
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: KiraWi
+      POSTGRES_DB: virt_health
+    ports:
+      - "5432:5432"
+    volumes:
+      - project-db-1:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+volumes:
+  project-db-1:
+

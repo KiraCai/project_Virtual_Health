@@ -1,0 +1,7 @@
+# Игнорировать папки сборки (front и backend)
+dist/
+build/
+node_modules/
+.env
+.idea/
+*.log
