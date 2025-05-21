@@ -1,0 +1,157 @@
+.infoBloc {
+  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 995px;
+  box-sizing: border-box;
+  padding-top: 50px;
+  padding-bottom: 10px;
+  gap: 30px;
+}
+#leftBloc {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  margin-left: 50px;
+}
+#rightBloc {
+  background-color: rgb(0, 0, 0, 50%);
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /*padding: 34px;*/
+  gap: 20px;
+  margin-right: 50px;
+}
+.formCalendar {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  border: 2px solid black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  padding-left: 70px;
+  padding-right: 70px;
+  padding-top: 30px;
+  background-color: rgb(0, 0, 0, 20%);
+}
+#upBloc {
+  background-color: rgb(0, 0, 0, 50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 34px;
+}
+#upleftBloc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  width: 50%;
+}
+#upleftBloc p {
+  line-height: 2;
+}
+#upRightBloc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  height: 80%;
+  margin: 30px;
+}
+.longBloc {
+  padding: 20px;
+  background-color: white;
+  border: 2px solid black;
+  font-size: 18px;
+  text-align: justify;
+}
+.upRightBloc .namePers {
+  margin-bottom: 30px;
+}
+#bottomBloc {
+  background-color: rgb(0, 0, 0, 50%);
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 400px;
+  align-content: center;
+  align-items: center;
+}
+#bottomBloc .thin {
+  font-size: 18px;
+  text-align: justify;
+  padding: 30px;
+}
+#mapFoto {
+  width: 350px;
+  height: 300px;
+  background-image: url('../../pictures/map.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+  z-index: 20;
+  border: solid black 2px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  margin: 34px;
+}
+.inputDoc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.inputDoc * {
+  width: 350px;
+  text-align: center;
+  font-size: 22px;
+}
+.simple-select-doc {
+  background-color: white;
+  width: 350px;
+  height: 45px;
+  border: 2px solid black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  font-family: 'Kufi';
+  font-size: 20px;
+}
+.btnDoc {
+  font-size: 25px;
+}
+.styleLine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 30px;
+}
+
+.titleRetour {
+  font-size: 30px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  transition: 0.3s ease-in;
+  padding: 15px;
+}
+.titleRetour:hover {
+  background-color: var(--light-grass-color);
+}

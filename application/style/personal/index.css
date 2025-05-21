@@ -1,0 +1,251 @@
+@font-face {
+  font-family: 'Baloo';
+  src: url('../../fonts/BalooThambi-Regular.ttf') format('ttf'),
+    url('../../fonts/BalooThambi-Regular.woff') format('woff'),
+    url('../../fonts/BalooThambi-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Kufi';
+  src: url('../../fonts/ReemKufi-Regular.ttf') format('ttf'),
+    url('../../fonts/ReemKufi-Regular.woff') format('woff'),
+    url('../../fonts/ReemKufi-Regular.woff2') format('woff2');
+}
+:root {
+  /*main Dark Blue color*/
+  --main-dark-color: #1a3376;
+}
+/*for header*/
+body {
+  background-color: white;
+  margin: 0;
+}
+#app {
+  margin: 0;
+  background-color: white;
+}
+
+nav {
+  background-color: white;
+}
+.wrapper {
+  display: grid;
+  grid-auto-rows: minmax(40px, auto);
+  grid-auto-columns: minmax(100px, auto);
+  grid-template-areas:
+    ' . . c . a a a'
+    ' b b c . d d d';
+  grid-gap: 10px;
+  align-items: center;
+}
+.fat {
+  font-family: 'Baloo';
+  color: #000000;
+}
+.thin {
+  font-family: 'Kufi';
+}
+.wrapper {
+  margin: 15px;
+}
+.wrapper div a {
+  text-decoration: none;
+}
+
+.box1 {
+  grid-area: a;
+  color: #000000;
+  align-self: center; /*y*/
+  justify-self: center;
+  display: flex;
+  grid-gap: 10px;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 2px solid black;
+  padding-left: 28px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-right: 28px;
+}
+.box1 > * {
+  color: #000000;
+  background-color: white;
+  font-size: 20px;
+  transition: 0.3s ease-in-out;
+}
+
+.box1 a:hover:not(.buttonStyleDark) {
+  right: 0px;
+  bottom: 0px;
+  width: 90%;
+  border-bottom: 2px solid black;
+  border-top: 2px solid black;
+  content: '';
+  background-color: var(--main-dark-color); /*rgb(0, 0, 0, 70%);*/
+  color: white;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.box2 {
+  grid-area: b;
+  align-self: center;
+  justify-self: end;
+  font-size: 60px;
+}
+.box3 {
+  grid-area: c;
+  align-self: end;
+  justify-self: start;
+}
+.box4 {
+  grid-area: d;
+  align-self: center; /*y*/
+  justify-self: center; /*x*/
+  font-size: 30px;
+  border: 2px solid black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+.box4 > .searchLink {
+  color: black;
+}
+.buttonStyleDark {
+  color: white;
+  background-color: var(--main-dark-color);
+  border: 2px solid black;
+  padding-left: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-right: 10px;
+  text-decoration: none;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+.buttonStyleDark:hover {
+  background-color: white; /*rgb(0, 0, 0, 70%);*/
+  color: var(--main-dark-color);
+}
+/*for footer*/
+.footwrap {
+  display: grid;
+  grid-auto-rows: minmax(100px, auto);
+  grid-template-areas:
+    ' one one '
+    ' two three ';
+  grid-gap: 0px;
+  align-items: center;
+  margin: 0px;
+  background-image: url('../../pictures/knapweed2.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+  z-index: 0;
+}
+.fbox1 {
+  grid-area: one;
+  background-color: rgb(0, 0, 0, 30%);
+  height: 100%;
+  z-index: 10;
+}
+#logofoot {
+  z-index: 20;
+  height: 100%;
+  width: 40%;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-around; /*x*/
+  grid-gap: 10px;
+}
+#logofoot a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  /*height: 50px;*/
+  width: 78px;
+  height: 78px;
+  transition: 0.3s ease-in;
+}
+
+#logofoot a:hover {
+  background-color: rgb(225, 225, 225, 70%);
+  /*padding: 7px;*/
+}
+.fbox2 {
+  grid-area: two;
+  background-color: rgb(0, 0, 0, 70%);
+  height: 100%;
+  width: 100%;
+  z-index: 20;
+  align-self: center;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+}
+.fbox3 {
+  grid-area: three;
+  background-color: rgb(0, 0, 0, 70%);
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  align-self: center;
+  justify-self: center;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+}
+.textfoot {
+  text-align: justify;
+  margin: 10px;
+  margin-top: 40px;
+  height: 70%;
+  width: 80%;
+  font-size: 23px;
+  z-index: 20;
+  position: relative;
+}
+.textfoot::before {
+  position: absolute;
+  top: 0px;
+  left: -35px;
+  width: 110%;
+  border: 1px solid white;
+  content: '';
+}
+
+.fbox2 {
+  position: relative;
+}
+.fbox2::after {
+  position: absolute;
+  right: 0px;
+  bottom: 20px;
+  height: 90%;
+  border: 2px solid white;
+  content: '';
+}
+
+.boxli {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.boxli > * {
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  z-index: 20;
+  margin: 40px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  transition: 0.3s ease-in-out;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.boxli a:hover {
+  background-color: rgb(0, 0, 0, 60%);
+}

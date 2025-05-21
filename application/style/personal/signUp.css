@@ -1,0 +1,128 @@
+:root {
+  /*main Dark Blue color*/
+  --light-background-color: #c0dcea;
+  --color-attention: rgb(230, 68, 146);
+  --color-reverse-light: #b0d7eb;
+}
+.mainSign {
+  background-image: url('../../pictures/water.jpg');
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+.signPage {
+  background-color: rgb(0, 0, 0, 60%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: white;
+}
+#layoutCart {
+  margin-bottom: 80px;
+}
+#signForm {
+  background-color: rgb(225, 225, 225, 90%);
+  color: black;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 465px;
+  gap: 20px;
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: justify;
+  font-size: 30px;
+}
+.titleStyle {
+  font-size: 52px;
+  color: white;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+/**:required {
+  border-color: #800000;
+  background-color: #ffdddd;
+  border-width: 3px;
+}*/
+.btn {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  width: 352px;
+}
+
+.btnLink > a:link {
+  display: inline-block;
+  box-sizing: border-box;
+  text-decoration: none;
+  height: 45px;
+  width: 352px;
+  text-align: center;
+  font-size: 22px;
+}
+.text-danger {
+  color: rgb(230, 6, 6);
+  font-size: 20px;
+  font-family: 'Kufi';
+  margin-top: 15px;
+}
+.articleClue {
+  text-align: left;
+}
+.rules {
+  font-size: 14px;
+  margin: 0px;
+}
+
+.input-box > input {
+  border: 2px solid black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  font-family: 'Kufi';
+  font-size: 22px;
+  height: 45px;
+  width: 352px;
+}
+.input-box > input:not(.btn) {
+  background-color: white;
+}
+input:focus:not(.btn) {
+  background-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px rgb(0, 0, 0, 70%) inset !important;
+  -webkit-text-fill-color: var(--color-reverse-light);
+}
+input:valid:not(.btn) {
+  background-color: var(--light-background-color); /*#68afd2;*/
+}
+input:invalid {
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-attention) inset !important;
+  -webkit-text-fill-color: white;
+}
+input:valid:not(.btn):focus {
+  background-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px rgb(0, 0, 0, 70%) inset !important;
+  -webkit-text-fill-color: var(--color-reverse-light);
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--light-background-color) inset !important;
+  -webkit-background-clip: text;
+  transition: background-color 5000s ease-in-out 0s;
+}
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px rgb(0, 0, 0, 70%) inset !important;
+  -webkit-text-fill-color: var(--color-reverse-light);
+}
+/*#cdff07
+#dbe398
+rgba(223, 14, 14, 0.7)
+rgb(230, 68, 146)*/

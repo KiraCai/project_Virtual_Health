@@ -1,0 +1,115 @@
+:root {
+  /*main Dark Blue color*/
+  --light-grass-color: rgb(194, 246, 90);
+  --hard-blue-1: #4474b2;
+}
+.titleStyle {
+  color: black;
+  text-align: left;
+}
+.searchLink {
+  display: inline-block;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  gap: 8px;
+  color: black;
+  transition: 0.3s ease-in;
+  height: 49px;
+  width: 400px;
+}
+.searchLink:hover {
+  background-color: var(--light-grass-color);
+}
+.lineStyle {
+  background-color: var(--hard-blue-1);
+  height: 195px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0px;
+  color: white;
+}
+.searcheBloc {
+  background-color: rgb(0, 0, 0, 60%);
+  color: black;
+  height: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 20;
+}
+.searcheBloc::before {
+  position: absolute;
+  top: 90px;
+  left: 130px;
+  width: 80%;
+  border: 2px solid black;
+  content: '';
+}
+.searcheBloc:first-child {
+  color: black;
+}
+.searchForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  height: 100%;
+  width: 465px;
+}
+.searchBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+#searchForm:first-child > * {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.simple-select {
+  background-color: white;
+  width: 260px;
+  height: 45px;
+  border: 2px solid black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  font-family: 'Kufi';
+  font-size: 22px;
+}
+#union {
+  font-size: 25px;
+}
+#searchBoxAll > input {
+  background-color: white;
+  color: black;
+  width: 1090px;
+  height: 50px;
+  border: 2px solid black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  font-family: 'Kufi';
+  font-size: 22px;
+}
+#searchBoxBtn > input {
+  width: 1097px;
+  height: 65px;
+  font-family: 'Baloo';
+  font-size: 35px;
+  border: 2px solid black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+/*{this.state.data.map((item, key) => (
+                    <option key={key} value={item.displayValue} />
+                  ))}*/
