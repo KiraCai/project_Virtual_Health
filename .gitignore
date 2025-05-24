@@ -1,11 +1,9 @@
-<<<<<<< HEAD
-# Игнорировать папки сборки (front и backend)
+
 dist/
 build/
 node_modules/
 .env
 .idea/
 *.log
-=======
 node_modules
->>>>>>> 662e188 (nitial commit for frontend)
+
