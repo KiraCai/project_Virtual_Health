@@ -1,25 +1,38 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { signupClient } from "./api/apiSignUp";
 
 class SignUp extends React.Component {
   constructor() {
     super();
     this.state = {
-      input: {},
+      input: {
+        lastName: '',
+        firstName: '',
+        email: '',
+        tel: '',
+        password: ''
+      },
       errors: {},
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  handleChange(event) {
-    let input = this.state.input;
-    input[event.target.name] = event.target.value;
-    this.setState({
-      input,
-    });
-  }
-  handleSubmit(event) {
+
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState(prevState => ({
+      input: {
+        ...prevState.input,
+        [name]: value,
+      },
+    }));
+  };
+
+  handleSubmit = (event) => {
     event.preventDefault();
+    const { lastName, firstName, email, tel, password } = this.state.input;
+
     if (this.validate()) {
       console.log(this.state);
       let input = {};
@@ -28,7 +41,16 @@ class SignUp extends React.Component {
       this.setState({ input: input });
       alert('Le formulaire est soumis');
     }
-  }
+
+    signupClient(lastName, firstName, email, tel, password)
+        .then(response => {
+          console.log('User signed up:', response);
+        })
+        .catch(error => {
+          console.error('Signup error:', error);
+        });
+  };
+
   validate() {
     let input = this.state.input;
     let errors = {};
@@ -73,9 +95,11 @@ class SignUp extends React.Component {
                 <label>Nom </label>
                 <input
                   type="text"
-                  name="name"
+                  name="lastName"
                   placeholder="Entrez votre nom"
                   pattern="^[a-zA-Z]+$"
+                  value={this.state.input.lastName}
+                  onChange={this.handleChange}
                   aria-required="true"
                   required
                 />
@@ -84,9 +108,11 @@ class SignUp extends React.Component {
                 <label>Prénom </label>
                 <input
                   type="text"
-                  name="surname"
+                  name="firstName"
                   placeholder="Entrez votre prénom"
                   pattern="^[a-zA-Z]+$"
+                  value={this.state.input.firstName}
+                  onChange={this.handleChange}
                   aria-required="true"
                   required
                 />
@@ -95,9 +121,11 @@ class SignUp extends React.Component {
                 <label>e-mail </label>
                 <input
                   type="email"
-                  name="mail"
+                  name="email"
                   placeholder="Entrez votre e-mail"
                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                  value={this.state.input.email}
+                  onChange={this.handleChange}
                   aria-required="true"
                   required
                 />
@@ -109,6 +137,8 @@ class SignUp extends React.Component {
                   name="tel"
                   placeholder="+33123456789"
                   pattern="^\+[0-9]{11}$"
+                  value={this.state.input.tel}
+                  onChange={this.handleChange}
                   aria-required="true"
                   required
                 />
