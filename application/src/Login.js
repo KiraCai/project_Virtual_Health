@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { signupUser } from "./api/apiLogin";
+import {loginUser} from "./api/apiLogin";
 
 class Login extends React.Component {
   constructor() {
@@ -29,13 +29,14 @@ class Login extends React.Component {
     event.preventDefault();
     const { email, password } = this.state.input;
     // Можно добавить валидацию здесь (по желанию). Вызов функции из apiLogin.js, чтобы отправить данные
-    signupUser(email, password)
+    let reponseBase = loginUser(email, password)
         .then(response => {
-          console.log('User signed up:', response);
+          console.log('User login:', response);
         })
         .catch(error => {
-          console.error('Signup error:', error);
+          console.error('Login error:', error);
         });
+    console.log(reponseBase)
   };
 
   render() {

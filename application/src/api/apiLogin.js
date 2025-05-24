@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const signupUser = async (email, password) => {
+export const loginUser = async (email, password) => {
     try {
         const response = await axios.post(
             "/api/v0.1/users/login",
@@ -11,10 +11,10 @@ export const signupUser = async (email, password) => {
                 },
             }
         );
-        console.log("Пользователь вошел в систему:", response.data);
+        console.log("User logged in:", response.data);
         console.log("email" + email);
         console.log("password" + password)
     } catch (error) {
-        console.error("Ошибка входа в систему:", error.response || error);
+        console.error("Login error:", error.response || error);
     }
 };
