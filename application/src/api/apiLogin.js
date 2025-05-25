@@ -12,8 +12,8 @@ export const loginUser = async (email, password) => {
             }
         );
         console.log("User logged in:", response.data);
-        console.log("email" + email);
-        console.log("password" + password)
+        sessionStorage.setItem("token", response.data.token);
+
     } catch (error) {
         console.error("Login error:", error.response || error);
     }

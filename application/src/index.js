@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Navigat from './Navigat';
 import HomePage from './HomePage';
 import SignUp from './SignUp';
@@ -30,7 +30,7 @@ root.render(
       <Routes>
         <Route path="/" element={<Navigat />}>
           <Route index element={<HomePage />} />
-          <Route path="personal" element={<PersonalAcc />} />
+          <Route path="profile" element ={<PersonalAcc />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="login" element={<Login />} />
           <Route path="search" element={<Search />} />

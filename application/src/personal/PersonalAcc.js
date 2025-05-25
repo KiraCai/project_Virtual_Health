@@ -5,6 +5,30 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import searchW from '../../pictures/searchW.png';
 
 const PersonalAcc = () => {
+      const [user, setUser] = useState(null);
+      const navigate = useNavigate();
+
+      useEffect(() => {
+          const token = sessionStorage.getItem("token");
+          if (token) {
+              axios.get('/api/v0.1/users/profile', {
+                  headers: { Authorization: `Bearer ${token}` }
+              })
+                  .then(res => {
+                    setUser(res.data);
+                  })
+                  .catch(() => {
+                    sessionStorage.removeItem("token");
+                    setUser(null);
+                    navigate("/api/v0.1/users/login");
+                  });
+        } else {
+            navigate("/api/v0.1/users/login");
+        }
+    }, []);
+
+    if (!user) return null;
+
   return (
     <main className="thin">
       <div>
@@ -36,12 +60,10 @@ const PersonalAcc = () => {
   );
 };
 
-export default PersonalAcc;
-
 const Panel = () => {
   const [unit, setUnit] = React.useState('');
 
-  var optionsUnit = [
+  let optionsUnit = [
     { id: 1, name: 'Réservations' },
     { id: 2, name: 'Antécédents médicaux' },
     { id: 3, name: 'Consultations' },
@@ -100,7 +122,7 @@ const Panel = () => {
 };
 
 const Info = () => {
-  var infoUnit = [
+  let infoUnit = [
     {
       id: 1,
       nom: 'Hugo',
@@ -123,7 +145,7 @@ const Info = () => {
       numéro_assurance: 'Dsdfsdgfglf',*/
     },
   ];
-  var optionsType = [
+  let optionsType = [
     { id: 1, name: 'passeport' },
     { id: 2, name: 'carte identité' },
     { id: 3, name: 'permis de conduire' },
@@ -185,7 +207,7 @@ text/plain, application/pdf, image/*"
 };
 
 const FillInformation = () => {
-  var titleUnit = [
+  let titleUnit = [
     {
       1: 'Réservations',
       2: 'Antécédents médicaux',
@@ -195,7 +217,7 @@ const FillInformation = () => {
       6: 'Tests',
     },
   ];
-  var noteUnit = [
+  let noteUnit = [
     {
       note1:
         'Lorem ipsum odor amet, consectetuer adipiscing elit Fames cras fusce duis inceptos faucibus amet nulla. Taciti aenean nam feugiat eros convallis metus. Parturient hac imperdiet taciti praesent dis eu dictum  euismod vitae. Duis taciti elementum sodales eleifend tellus urna. Sem ultricies at a orci lacus. Consequat aliquet mauris nostra eget facilisis maximus.  Ornare quis ante duis laoreet morbi potenti. Senectus sollicitudin nec cras enim erat nisi velit litora.',
@@ -219,3 +241,5 @@ const FillInformation = () => {
     </>
   );
 };
+
+export default PersonalAcc;
