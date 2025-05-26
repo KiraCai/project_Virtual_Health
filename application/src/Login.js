@@ -1,52 +1,38 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import {Link, useNavigate} from 'react-router-dom';
 import {loginUser} from "./api/apiLogin";
 
-class Login extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      input: {
-        email: '',
-        password: ''
-      },
-      errors: {},
-    };
-  }
+const Login = () => {
+  const [input, setInput] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+
   // Обработчик изменения input
-  handleChange = (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
-    this.setState(prevState => ({
-      input: {
-        ...prevState.input,
-        [name]: value,
-      },
-    }));
+    setInput(prev => ({ ...prev, [name]: value }));
   };
 
   // Обработчик отправки формы
-  handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const { email, password } = this.state.input;
-    // Можно добавить валидацию здесь (по желанию). Вызов функции из apiLogin.js, чтобы отправить данные
-    let reponseBase = loginUser(email, password)
-        .then(response => {
-          console.log('User login:', response);
-        })
-        .catch(error => {
-          console.error('Login error:', error);
-        });
-    console.log(reponseBase)
+    try {
+      const response = await loginUser(input.email, input.password);
+      console.log('User login:', response);
+      navigate('/profile'); // Перенаправление на страницу профиля
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrors({ password: 'Erreur de connexion. Vérifiez vos informations.' });
+    }
   };
 
-  render() {
-    return (
+  return (
         <main className="mainSign thin">
           <div className="signPage fat">
             <div className="titleStyle">Connection</div>
 
             <div id="layoutCart">
-              <form id="signForm" method="post" onSubmit={this.handleSubmit}>
+              <form id="signForm" method="post" onSubmit={handleSubmit}>
                 <div className="input-box">
                   <label>e-mail </label>
                   <input
@@ -54,8 +40,8 @@ class Login extends React.Component {
                       name="email"
                       placeholder="Entrez votre e-mail"
                       pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}"
-                      value={this.state.input.email}
-                      onChange={this.handleChange}
+                      value={input.email}
+                      onChange={handleChange}
                       aria-required="true"
                       required
                   />
@@ -65,8 +51,8 @@ class Login extends React.Component {
                   <input
                       type="password"
                       name="password"
-                      value={this.state.input.password}
-                      onChange={this.handleChange}
+                      value={input.password}
+                      onChange={handleChange}
                       className="form-control"
                       placeholder="Entrez votre mot de passe"
                       id="password"
@@ -75,7 +61,7 @@ class Login extends React.Component {
                       autoComplete="on"
                       required
                   />
-                  <div className="text-danger">{this.state.errors.password}</div>
+                  <div className="text-danger">{errors.password}</div>
                 </div>
                 <div className="input-box">
                   <input
@@ -97,6 +83,6 @@ class Login extends React.Component {
           </div>
         </main>
     );
-  }
+
 }
 export default Login;

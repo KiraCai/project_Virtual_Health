@@ -9,7 +9,7 @@ const Navigat = () => {
       <header>
         <nav className="wrapper">
           <div className="box1 thin">
-            <Link to="/personal">Patients</Link>|
+            <Link to="/profile">Patients</Link>|
             <Link to="/blogs">Médecins</Link>|<Link to="/blogs">FAO</Link>|
             <Link className="buttonStyleDark" to="/signup">
               INSCRIPTION

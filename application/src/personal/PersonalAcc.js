@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import { MenuItem } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -11,6 +13,8 @@ const PersonalAcc = () => {
       useEffect(() => {
           const token = sessionStorage.getItem("token");
           if (token) {
+              console.log("Токен перед отправкой запроса:", token);
+
               axios.get('/api/v0.1/users/profile', {
                   headers: { Authorization: `Bearer ${token}` }
               })
@@ -20,10 +24,10 @@ const PersonalAcc = () => {
                   .catch(() => {
                     sessionStorage.removeItem("token");
                     setUser(null);
-                    navigate("/api/v0.1/users/login");
+                    navigate("/login");
                   });
         } else {
-            navigate("/api/v0.1/users/login");
+            navigate("/login");
         }
     }, []);
 
@@ -35,7 +39,7 @@ const PersonalAcc = () => {
         <Panel />
       </div>
       <div className="boxInfo">
-        <Info />
+        <Info user={user} />
       </div>
       <div id="boxBooking" className="boxGeneral">
         <FillInformation />
@@ -121,57 +125,120 @@ const Panel = () => {
   );
 };
 
-const Info = () => {
-  let infoUnit = [
-    {
-      id: 1,
-      nom: 'Hugo',
-      prénom: 'Victor',
-      date_de_naissance: '26/01/1802',
-      ville: 'Besançon',
-      /*adresse: 'Ksfjdl fsljdf 8',
-      numéro_assurance: '1284723469',
-      sexe: 'sexe masculin',
-      groupe_sanguin: 'A+',
-      téléphone: '+330932092323',
-      mail: 'kdsfdkfj@gmail.com',
-      adresse: 'dfdaskfjl fkds',
-      numéro_assurance: 'KLDJEds 987',
-      sexe: 'dsfkdfk;ewm',
-      groupe_sanguin: 'Antsdfwwj 08ux',
-      téléphone: 'ad sdf sdf sdf 9887',
-      mail: 'sdfksa sdfljsdf sdlfsdjf lsdfsdldf dfsdlflj ',
-      adresse: 'sdfsdf sDDF dfsd Fsdfsdfgsdgdsf',
-      numéro_assurance: 'Dsdfsdgfglf',*/
-    },
-  ];
-  let optionsType = [
-    { id: 1, name: 'passeport' },
-    { id: 2, name: 'carte identité' },
-    { id: 3, name: 'permis de conduire' },
-    { id: 4, name: 'acte de naissance' },
-    { id: 5, name: 'test' },
-    { id: 6, name: 'certificat' },
-    { id: 7, name: 'analyses' },
-  ];
-  const [type, setType] = React.useState('');
-  const handleChangeType = (event) => {
-    setType(event.target.value);
-  };
+const Info = ({ user }) => {
+    const [type, setType] = useState('');
+    const [editedUser, setEditedUser] = useState({ ...user });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setEditedUser(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSave = async () => {
+        const token = sessionStorage.getItem("token");
+        //DTO object
+        /*const dtoData = {
+            firstName: editedUser.firstName,
+            lastName: editedUser.lastName,
+            email: editedUser.email,
+            address: editedUser.address,
+            sex: editedUser.sex,
+            tel: editedUser.tel,
+            dateBirth: editedUser.dateBirth // todo "1990-01-01"
+        };*/
+        const dtoData = {
+            firstName: editedUser.firstName,
+            lastName: editedUser.lastName,
+            email: editedUser.email,
+            tel: editedUser.tel,
+            ...(editedUser.address ? { address: editedUser.address } : {}),
+            ...(editedUser.sex ? { sex: editedUser.sex } : {}),
+            ...(editedUser.dateBirth ? { dateBirth: editedUser.dateBirth } : {})
+        };
+        console.log("send DTO:", dtoData);
+        try {
+            await axios.put('/api/v0.1/users/profile/update', dtoData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            alert("Данные обновлены!");
+        } catch (err) {
+            console.error("Ошибка при обновлении:", err);
+            console.log("Ответ сервера:", err.response?.data);
+            alert("Ошибка при сохранении данных");
+        }
+    };
+
+    const handleChangeType = (event) => {
+        setType(event.target.value);
+    };
+
+
+    const optionsType = [
+        { id: 1, name: 'passeport' },
+        { id: 2, name: 'carte identité' },
+        { id: 3, name: 'permis de conduire' },
+        { id: 4, name: 'acte de naissance' },
+        { id: 5, name: 'test' },
+        { id: 6, name: 'certificat' },
+        { id: 7, name: 'analyses' },
+    ];
+
   return (
     <>
       <div className="titlePersoStyle fat">Informations personnelles</div>
-      <div id="persInfo">
-        <div id="textInfo">
-          {Object.entries(infoUnit[0]).map(([key, value]) => {
-            return (
-              <div className="lines">
-                <div className="linePers fat">{key}</div>
-                <div className="valueInfo">{value}</div>
-              </div>
-            );
-          })}
-        </div>
+        <div id="persInfo">
+            <div id="textInfo">
+                <div className="lines">
+                    <div className="linePers fat">Nom</div>
+                    <input
+                        type="text"
+                        name="lastName"
+                        value={editedUser.lastName || ''}
+                        onChange={handleChange}
+                        className="valueInfo"
+                    />
+                </div>
+                <div className="lines">
+                    <div className="linePers fat">Prénom</div>
+                    <input
+                        type="text"
+                        name="firstName"
+                        value={editedUser.firstName || ''}
+                        onChange={handleChange}
+                        className="valueInfo"
+                    />
+                </div>
+                <div className="lines">
+                    <div className="linePers fat">Date de naissance</div>
+                    <div className="valueInfo">{user.dateBirth}</div>
+                    <input
+                        type="text"
+                        name="dateBirth"
+                        value={editedUser.dateBirth || ''}
+                        onChange={handleChange}
+                        className="valueInfo"
+                    />
+                </div>
+                <div className="lines">
+                    <div className="linePers fat">Adresse</div>
+                    <div className="valueInfo">{user.address}</div>
+                </div>
+                <div className="lines">
+                    <div className="linePers fat">Téléphone</div>
+                    <div className="valueInfo">{user.tel}</div>
+                </div>
+                <div className="lines">
+                    <div className="linePers fat">E-mail</div>
+                    <div className="valueInfo">{user.email}</div>
+                </div>
+                <div className="lines">
+                    <div className="linePers fat">Sexe</div>
+                    <div className="valueInfo">{user.sex}</div>
+                </div>
+            </div>
         <div id="fotoInfo">
           <div className="foto shadowFoto"></div>
           <div className="btnSize buttonStyleDark2 fat">modifier</div>
@@ -202,6 +269,9 @@ text/plain, application/pdf, image/*"
           <div className="btnSize buttonStyleDark2 fat">envoyer</div>
         </div>
       </div>
+        <button className="btnSize buttonStyleDark2 fat" onClick={handleSave}>
+            Enregistrer
+        </button>
     </>
   );
 };
