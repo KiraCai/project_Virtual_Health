@@ -5,6 +5,7 @@ import axios from 'axios';
 import { MenuItem } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import searchW from '../../pictures/searchW.png';
+import edit from '../../pictures/edit.png'
 
 const PersonalAcc = () => {
       const [user, setUser] = useState(null);
@@ -128,6 +129,8 @@ const Panel = () => {
 const Info = ({ user }) => {
     const [type, setType] = useState('');
     const [editedUser, setEditedUser] = useState({ ...user });
+    const [editMode, setEditMode] = useState(false); //todo add for mode change
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -137,15 +140,6 @@ const Info = ({ user }) => {
     const handleSave = async () => {
         const token = sessionStorage.getItem("token");
         //DTO object
-        /*const dtoData = {
-            firstName: editedUser.firstName,
-            lastName: editedUser.lastName,
-            email: editedUser.email,
-            address: editedUser.address,
-            sex: editedUser.sex,
-            tel: editedUser.tel,
-            dateBirth: editedUser.dateBirth // todo "1990-01-01"
-        };*/
         const dtoData = {
             firstName: editedUser.firstName,
             lastName: editedUser.lastName,
@@ -163,11 +157,11 @@ const Info = ({ user }) => {
                     "Content-Type": "application/json",
                 },
             });
-            alert("Данные обновлены!");
+            alert("Data updated!");
         } catch (err) {
-            console.error("Ошибка при обновлении:", err);
-            console.log("Ответ сервера:", err.response?.data);
-            alert("Ошибка при сохранении данных");
+            console.error("Error during update:", err);
+            console.log("Server response:", err.response?.data);
+            alert("Error saving data");
         }
     };
 
@@ -189,54 +183,120 @@ const Info = ({ user }) => {
   return (
     <>
       <div className="titlePersoStyle fat">Informations personnelles</div>
+        <div className="btnSize buttonStyleDark2 fat" onClick={() => setEditMode(!editMode)}>
+            <img src={edit} alt="modifier" style={{ width: '40px', marginRight: '10px', marginLeft: '10px', fontSize: '22px' }} />
+            {editMode ? 'Annuler' : 'Modifier'}
+        </div>
         <div id="persInfo">
+
             <div id="textInfo">
                 <div className="lines">
                     <div className="linePers fat">Nom</div>
-                    <input
-                        type="text"
-                        name="lastName"
-                        value={editedUser.lastName || ''}
-                        onChange={handleChange}
-                        className="valueInfo"
-                    />
+                    {editMode ? (
+                        <input
+                            type="text"
+                            name="lastName"
+                            value={editedUser.lastName || ''}
+                            onChange={handleChange}
+                            className="valueInfo"
+                        />
+                    ) : (
+                        <div className="linePers valueInfo">{user.lastName}</div>
+                    )}
                 </div>
                 <div className="lines">
                     <div className="linePers fat">Prénom</div>
-                    <input
-                        type="text"
-                        name="firstName"
-                        value={editedUser.firstName || ''}
-                        onChange={handleChange}
-                        className="valueInfo"
-                    />
+                    {editMode ? (
+                        <input
+                            type="text"
+                            name="firstName"
+                            value={editedUser.firstName || ''}
+                            onChange={handleChange}
+                            className="valueInfo"
+                        />
+                    ) : (
+                        <div className="linePers valueInfo">{user.firstName}</div>
+                    )}
                 </div>
                 <div className="lines">
                     <div className="linePers fat">Date de naissance</div>
-                    <div className="valueInfo">{user.dateBirth}</div>
-                    <input
-                        type="text"
-                        name="dateBirth"
-                        value={editedUser.dateBirth || ''}
-                        onChange={handleChange}
-                        className="valueInfo"
-                    />
+                    {editMode ? (
+                        <>
+                        <input
+                            type="text"
+                            name="dateBirth"
+                            value={editedUser.dateBirth || ''}
+                            onChange={handleChange}
+                            className="valueInfo"
+                            placeholder="AAAA-MM-JJ"
+                        />
+                            <div className="infoText linePers">Format: AAAA-MM-JJ</div>
+                        </>
+
+                    ) : (
+                        <div className="linePers valueInfo">{user.dateBirth}</div>
+                    )}
                 </div>
                 <div className="lines">
                     <div className="linePers fat">Adresse</div>
-                    <div className="valueInfo">{user.address}</div>
+                    {editMode ? (
+                        <input
+                            type="text"
+                            name="address"
+                            value={editedUser.address || ''}
+                            onChange={handleChange}
+                            className="valueInfo"
+                        />
+                    ) : (
+                        <div className="linePers valueInfo">{user.address}</div>
+                    )}
                 </div>
                 <div className="lines">
                     <div className="linePers fat">Téléphone</div>
-                    <div className="valueInfo">{user.tel}</div>
+                    {editMode ? (
+                        <input
+                            type="text"
+                            name="tel"
+                            value={editedUser.tel || ''}
+                            onChange={handleChange}
+                            className="valueInfo"
+                        />
+                    ) : (
+                        <div className="linePers valueInfo">{user.tel}</div>
+                    )}
                 </div>
                 <div className="lines">
                     <div className="linePers fat">E-mail</div>
-                    <div className="valueInfo">{user.email}</div>
+                    {editMode ? (
+                        <>
+                        <input
+                            type="text"
+                            name="email"
+                            value={editedUser.email || ''}
+                            onChange={handleChange}
+                            className="valueInfo"
+                        />
+                            <div className="infoText warning linePers">
+                                Après modification, vous devrez vous reconnecter avec votre ancien mot de passe.
+                            </div>
+                        </>
+                    ) : (
+                        <div className="linePers valueInfo">{user.email}</div>
+                    )}
                 </div>
                 <div className="lines">
                     <div className="linePers fat">Sexe</div>
-                    <div className="valueInfo">{user.sex}</div>
+                    {editMode ? (
+                        <input
+                            type="text"
+                            name="sex"
+                            value={editedUser.sex || ''}
+                            onChange={handleChange}
+                            className="valueInfo"
+                        />
+                    ) : (
+                        <div className="linePers valueInfo">{user.sex}</div>
+                    )}
                 </div>
             </div>
         <div id="fotoInfo">
@@ -269,9 +329,11 @@ text/plain, application/pdf, image/*"
           <div className="btnSize buttonStyleDark2 fat">envoyer</div>
         </div>
       </div>
-        <button className="btnSize buttonStyleDark2 fat" onClick={handleSave}>
-            Enregistrer
-        </button>
+        {editMode && (
+            <button id="sendMode" className="btnSize buttonStyleDark2 fat" onClick={handleSave}>
+                Enregistrer
+            </button>
+        )}
     </>
   );
 };

@@ -236,8 +236,12 @@
   padding-right: 50px;
 }
 .infoNote {
-  font-size: 24;
+  font-size: 24px;
   text-align: justify;
+}
+#sendMode{
+  font-size: 22px;
+  text-align: center;
 }
 /*{Object.entries(titleUnit[0]).map(([key, value]) => {
        
