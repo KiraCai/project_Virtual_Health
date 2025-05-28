@@ -11,8 +11,9 @@
     url('../../fonts/ReemKufi-Regular.woff2') format('woff2');
 }
 :root {
-  /*main Dark Blue color*/
   --main-dark-color: #1a3376;
+  --super-dark-color: #04145F;
+  --sunshine: #EDEAC2;
 }
 /*for header*/
 body {
@@ -90,6 +91,13 @@ nav {
   align-self: center;
   justify-self: end;
   font-size: 60px;
+}
+.box2 a{
+  color: var(--super-dark-color);
+  text-decoration: none;
+}
+.box2 a:active {
+  color: var(--color-reverse-light);
 }
 .box3 {
   grid-area: c;

@@ -243,14 +243,108 @@
   font-size: 22px;
   text-align: center;
 }
-/*{Object.entries(titleUnit[0]).map(([key, value]) => {
-       
-        return <div className="titleStyle lineStyle fat">{value}</div>;, key+1
-      })}*/
-/*function makeCounter(initial = 0) {
-  let counter = initial;
+.editStyle{
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 22px;
+  width: 356px !important;
+  height: 48px !important;
+  margin-left: min(3em, 70px);
+  margin-top: min(2em, 60px);
+}
+.editStyle1{
+  font-size: 22px;
+  height: 48px;
+  width: 356px;
+  margin-left: min(3em, 70px);
+}
+.warning{
+  background-color: var(--color-attention);
+  font-size: 18px;
+  padding: 6px;
+}
+.lines{
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
 
-  return function() {
-    return counter += 1;
-  }
-}*/
+.titleWithPlus{
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+.iconPlus{
+  height: 49px;
+  width: 49px;
+  cursor: pointer;
+}
+
+.modalBox {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 500px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  margin: auto;
+}
+
+.modalTitle {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Увеличено расстояние между элементами */
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup label {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.formGroup input {
+  padding: 15px; /* Увеличен внутренний отступ для ввода текста */
+  border: 1px solid #ccc;
+  border-radius: 8px; /* Более скругленные углы */
+  font-size: 16px; /* Увеличен шрифт */
+  background-color: #f9f9f9;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.formGroup input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.submitButton {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 15px; /* Увеличен размер кнопки */
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.submitButton:hover {
+  background: #0056b3;
+  transform: scale(1.05); /* Легкий эффект увеличения при наведении */
+}

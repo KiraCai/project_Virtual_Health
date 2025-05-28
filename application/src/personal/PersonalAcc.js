@@ -1,30 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AddIcon from '@mui/icons-material/Add';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
 
 import { MenuItem } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import searchW from '../../pictures/searchW.png';
-import edit from '../../pictures/edit.png'
+import edit from '../../pictures/edit.png';
+import plus from '../../pictures/plus.png';
 
 const PersonalAcc = () => {
-      const [user, setUser] = useState(null);
-      const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [data, setData] = useState(null); //todo all data
+    const navigate = useNavigate();
+
+    const [openModal, setOpenModal] = useState(null); // "tests" | "vaccinations" | null
+    const handleOpenModal = (section) => setOpenModal(section);
+    const handleCloseModal = () => setOpenModal(null);
+
+    const handleSubmit = async (e, section) => { //for add test/vaccinations
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const dataToSend = Object.fromEntries(formData.entries());
+        const token = sessionStorage.getItem("token");
+
+        try {
+            const url =
+                section === "tests"
+                    ? "/api/v0.1/users/profile/full/add_test"
+                    : "/api/v0.1/users/profile/full/add_vaccination";
+
+            await axios.post(url, dataToSend, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            alert("Добавлено успешно!");
+            handleCloseModal();
+            window.location.reload();
+        } catch (err) {
+            console.error("Ошибка при добавлении:", err);
+            alert("Ошибка при добавлении данных");
+        }
+    };
 
       useEffect(() => {
           const token = sessionStorage.getItem("token");
           if (token) {
               console.log("Токен перед отправкой запроса:", token);
 
-              axios.get('/api/v0.1/users/profile', {
+              axios.get('/api/v0.1/users/profile/full', {
                   headers: { Authorization: `Bearer ${token}` }
               })
                   .then(res => {
-                    setUser(res.data);
+                      const fullProfile = res.data;
+                      setUser(fullProfile.client);
+                      setData(fullProfile);
                   })
                   .catch(() => {
                     sessionStorage.removeItem("token");
-                    setUser(null);
                     navigate("/login");
                   });
         } else {
@@ -43,27 +80,66 @@ const PersonalAcc = () => {
         <Info user={user} />
       </div>
       <div id="boxBooking" className="boxGeneral">
-        <FillInformation />
-      </div>
-      <div id="boxHistory" className="boxGeneral">
-        <FillInformation />
+        <FillInformation title="Réservations" items={data?.reservations}/>
       </div>
       <div id="boxConsult" className="boxGeneral">
-        <FillInformation />
+        <FillInformation title="Consultations" items={data?.consultations}/>
       </div>
       <div id="boxPrescrip" className="boxGeneral">
-        <FillInformation />
+        <FillInformation title="Prescription" items={data?.prescriptions}/>
       </div>
-      <div id="boxVaccin" className="boxGeneral">
-        <FillInformation />
-      </div>
-      <div id="boxTests" className="boxGeneral">
-        <FillInformation />
+        <div id="boxVaccin" className="boxGeneral">
+            <div className="titleWithPlus btnSize buttonStyleDark2 fat">
+                <img src={plus}
+                     alt="add vaccination"
+                     onClick={() => handleOpenModal("vaccinations")}
+                     className="iconPlus" />
+            </div>
+            <FillInformation title="Vaccinations" items={data?.vaccinations}/>
+        </div>
+        <div id="boxTests" className="boxGeneral">
+            <div className="titleWithPlus btnSize buttonStyleDark2 fat">
+                <img src={plus}
+                     alt="add test"
+                     onClick={() => handleOpenModal("tests")}
+                     className="iconPlus" />
+            </div>
+            <FillInformation title="Tests" items={data?.tests}/>
+        </div>
 
-      </div>
+        <Modal open={!!openModal} onClose={handleCloseModal}>
+            <Box className="modalBox">
+                <h2>Add {openModal === 'tests' ? 'Test' : 'Vaccination'}</h2>
+                <form onSubmit={(e) => handleSubmit(e, openModal)}>
+
+                    <input type="date" name="date" required placeholder="Select date" />
+                    <input type="time" name="time" required placeholder="Select time" />
+                    <input name="place" required placeholder="Enter location" />
+                    <input name="reason" required placeholder="Enter reason" />
+                    <input type="file" name="document" required placeholder="Attach document" />
+
+                    {openModal === 'tests' && (
+                        <>
+                            <input name="result" required placeholder="Enter result" />
+                            <input name="nameTest" required placeholder="Enter test name" />
+                        </>
+                    )}
+                    {openModal === 'vaccinations' && (
+                        <>
+                            <input name="name" required placeholder="Enter vaccination name" />
+                            <input name="nameVac" required placeholder="Enter additional name" />
+                        </>
+                    )}
+                    <button type="submit">Save</button>
+                </form>
+            </Box>
+        </Modal>
+
     </main>
   );
 };
+
+
 
 const Panel = () => {
   const [unit, setUnit] = React.useState('');
@@ -183,9 +259,9 @@ const Info = ({ user }) => {
   return (
     <>
       <div className="titlePersoStyle fat">Informations personnelles</div>
-        <div className="btnSize buttonStyleDark2 fat" onClick={() => setEditMode(!editMode)}>
-            <img src={edit} alt="modifier" style={{ width: '40px', marginRight: '10px', marginLeft: '10px', fontSize: '22px' }} />
-            {editMode ? 'Annuler' : 'Modifier'}
+        <div className="btnSize buttonStyleDark2 fat editStyle" onClick={() => setEditMode(!editMode)}>
+            <img src={edit} alt="modifier" style={{  height: '36px' }} />
+            {editMode ? 'annuler' : 'modifier'}
         </div>
         <div id="persInfo">
 
@@ -230,7 +306,7 @@ const Info = ({ user }) => {
                             className="valueInfo"
                             placeholder="AAAA-MM-JJ"
                         />
-                            <div className="infoText linePers">Format: AAAA-MM-JJ</div>
+                            <div className="infoText linePers warning">Format: AAAA-MM-JJ</div>
                         </>
 
                     ) : (
@@ -277,7 +353,7 @@ const Info = ({ user }) => {
                             className="valueInfo"
                         />
                             <div className="infoText warning linePers">
-                                Après modification, vous devrez vous reconnecter avec votre ancien mot de passe.
+                                Après sa modification, vous devrez vous reconnecter en utilisant votre ancien mot de passe.
                             </div>
                         </>
                     ) : (
@@ -330,48 +406,39 @@ text/plain, application/pdf, image/*"
         </div>
       </div>
         {editMode && (
-            <button id="sendMode" className="btnSize buttonStyleDark2 fat" onClick={handleSave}>
-                Enregistrer
+            <button id="sendMode" className="btnSize buttonStyleDark2 fat editStyle1" onClick={handleSave}>
+                enregistrer
             </button>
         )}
     </>
   );
 };
 
-const FillInformation = () => {
-  let titleUnit = [
-    {
-      1: 'Réservations',
-      2: 'Antécédents médicaux',
-      3: 'Consultations',
-      4: 'Prescription',
-      5: 'Vaccinations',
-      6: 'Tests',
-    },
-  ];
-  let noteUnit = [
-    {
-      note1:
-        'Lorem ipsum odor amet, consectetuer adipiscing elit Fames cras fusce duis inceptos faucibus amet nulla. Taciti aenean nam feugiat eros convallis metus. Parturient hac imperdiet taciti praesent dis eu dictum  euismod vitae. Duis taciti elementum sodales eleifend tellus urna. Sem ultricies at a orci lacus. Consequat aliquet mauris nostra eget facilisis maximus.  Ornare quis ante duis laoreet morbi potenti. Senectus sollicitudin nec cras enim erat nisi velit litora.',
-      note2:
-        'Pharetra nostra bibendum ante at tellus. Lobortis condimentum augue metus purus nisi ligula. Euismod mollis ac in blandit dolor risus commodo cubilia. Convallis dictum ullamcorper bibendum tempor dapibus tellus consequat imperdiet. Lobortis pretium sed natoque magnis leo sapien posuere vitae. Volutpat ridiculus hendrerit augue magnis placerat volutpat. Atincidunt ultrices leo malesuada eleifend ad. Et dictum libero fermentum maecenas faucibus quam magnis risus.',
-    },
-  ];
-  return (
-    <>
-      <div className="titleStyle lineStyle fat">Réservations</div>;
-      <div className="blocNote">
-        {Object.entries(noteUnit[0]).map(([key, value]) => {
-          return (
-            <div className="linesNote">
-              <div className="dataNote buttonStyleDark2 fat">{key}</div>
-              <div className="infoNote fat">{value}</div>
+const FillInformation = ({ title, items }) => {
+    if (!items || items.length === 0) return null;
+
+    return (
+        <>
+            <div className="titleStyle lineStyle fat">{title}</div>
+            <div className="blocNote">
+                {items.map((item, index) => (
+                    <div key={index} className="linesNote">
+                        <div className="dataNote buttonStyleDark2 fat">
+                            {item.date || item.dateStart || item.createdAt || '??'}
+                        </div>
+                        <div className="infoNote fat">
+                            {Object.entries(item).map(([key, value]) => (
+                                key !== 'date' && key !== 'dateStart' && key !== 'createdAt' ? (
+                                    <div key={key}><strong>{key}:</strong> {String(value)}</div>
+                                ) : null
+                            ))}
+                        </div>
+                    </div>
+                ))}
             </div>
-          );
-        })}
-      </div>
-    </>
-  );
+        </>
+    );
 };
+
 
 export default PersonalAcc;
