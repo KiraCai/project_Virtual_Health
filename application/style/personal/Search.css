@@ -21,7 +21,7 @@
   width: 400px;
 }
 .searchLink:hover {
-  background-color: var(--sunshine);
+  background-color: var(--light-grass-color);
 }
 .lineStyle {
   background-color: var(--hard-blue-1);

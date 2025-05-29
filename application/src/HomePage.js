@@ -10,7 +10,7 @@ const HomePage = () => {
   /*hook original state*/
   const [selectedValue, setSelectedValue] = useState('man1');
   const [iteration, setIteration] = useState(0);
-  var arrayFoto = ['man1', 'work1', 'nature1'];
+  let arrayFoto = ['man1', 'work1', 'nature1'];
   const images = {
     man1: man,
     work1: red,

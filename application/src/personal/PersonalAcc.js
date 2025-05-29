@@ -10,6 +10,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import searchW from '../../pictures/searchW.png';
 import edit from '../../pictures/edit.png';
 import plus from '../../pictures/plus.png';
+import searchLogo from '../../pictures/search.png';
+import upArrow from '../../pictures/up_arrow.png'
 
 const PersonalAcc = () => {
     const [user, setUser] = useState(null);
@@ -72,77 +74,86 @@ const PersonalAcc = () => {
     if (!user) return null;
 
   return (
-    <main className="thin">
-      <div>
-        <Panel />
-      </div>
-      <div className="boxInfo">
-        <Info user={user} />
-      </div>
-      <div id="boxBooking" className="boxGeneral">
-        <FillInformation title="Réservations" items={data?.reservations}/>
-      </div>
-      <div id="boxConsult" className="boxGeneral">
-        <FillInformation title="Consultations" items={data?.consultations}/>
-      </div>
-      <div id="boxPrescrip" className="boxGeneral">
-        <FillInformation title="Prescription" items={data?.prescriptions}/>
-      </div>
-        <div id="boxVaccin" className="boxGeneral">
-            <div className="titleWithPlus btnSize buttonStyleDark2 fat">
-                <img src={plus}
-                     alt="add vaccination"
-                     onClick={() => handleOpenModal("vaccinations")}
-                     className="iconPlus" />
-            </div>
-            <FillInformation title="Vaccinations" items={data?.vaccinations}/>
-        </div>
-        <div id="boxTests" className="boxGeneral">
-            <div className="titleWithPlus btnSize buttonStyleDark2 fat">
-                <img src={plus}
-                     alt="add test"
-                     onClick={() => handleOpenModal("tests")}
-                     className="iconPlus" />
-            </div>
-            <FillInformation title="Tests" items={data?.tests}/>
-        </div>
+      <main className="thin">
+          <div>
+              <Panel/>
+          </div>
+          <div className="boxInfo">
+              <Info user={user}/>
+          </div>
+          <div id="boxBooking" className="boxGeneral">
+              <FillInformation title="Réservations" items={data?.reservations}/>
+          </div>
+          <div id="boxConsult" className="boxGeneral">
+              <FillInformation title="Consultations" items={data?.consultations}/>
+          </div>
+          <div id="boxPrescrip" className="boxGeneral">
+              <FillInformation title="Prescription" items={data?.prescriptions}/>
+          </div>
+          <div id="boxVaccin" className="boxGeneral">
+              <div className="btnCenter">
+                  <div className="titleWithPlus btnSize buttonStyleDark2 fat">
+                    <img src={plus}
+                       alt="add vaccination"
+                       onClick={() => handleOpenModal("vaccinations")}
+                       className="iconPlus"/>
+                    <span className="textPlus">add vaccination</span>
+                  </div>
+              </div>
+              <FillInformation title="Vaccinations" items={data?.vaccinations}/>
+          </div>
+          <div id="boxTests" className="boxGeneral">
+              <div className="btnCenter">
+              <div className="titleWithPlus btnSize buttonStyleDark2 fat">
+                  <img src={plus}
+                       alt="add test"
+                       onClick={() => handleOpenModal("tests")}
+                       className="iconPlus"/>
+                  <span className="textPlus">add test</span>
+              </div>
+              </div>
+              <FillInformation title="Tests" items={data?.tests}/>
+          </div>
 
-        <Modal open={!!openModal} onClose={handleCloseModal}>
-            <Box className="modalBox">
-                <h2>Add {openModal === 'tests' ? 'Test' : 'Vaccination'}</h2>
-                <form onSubmit={(e) => handleSubmit(e, openModal)}>
+          <a className="back-to-top" href="#top">
+              <img src={upArrow} alt="Up Arrow" className="up-arrow-image" />
+              <span>Retour en haut</span>
+          </a>
 
-                    <input type="date" name="date" required placeholder="Select date" />
-                    <input type="time" name="time" required placeholder="Select time" />
-                    <input name="place" required placeholder="Enter location" />
-                    <input name="reason" required placeholder="Enter reason" />
-                    <input type="file" name="document" required placeholder="Attach document" />
+          <Modal open={!!openModal} onClose={handleCloseModal}>
+              <Box className="modalBox">
+                  <h2>Add {openModal === 'tests' ? 'Test' : 'Vaccination'}</h2>
+                  <form onSubmit={(e) => handleSubmit(e, openModal)}>
 
-                    {openModal === 'tests' && (
-                        <>
-                            <input name="result" required placeholder="Enter result" />
-                            <input name="nameTest" required placeholder="Enter test name" />
-                        </>
-                    )}
-                    {openModal === 'vaccinations' && (
-                        <>
-                            <input name="name" required placeholder="Enter vaccination name" />
-                            <input name="nameVac" required placeholder="Enter additional name" />
-                        </>
-                    )}
-                    <button type="submit">Save</button>
-                </form>
-            </Box>
-        </Modal>
+                      <input type="date" name="date" required placeholder="Select date"/>
+                      <input type="time" name="time" required placeholder="Select time"/>
+                      <input name="place" required placeholder="Enter location"/>
+                      <input name="reason" required placeholder="Enter reason"/>
+                      <input type="file" name="document" required placeholder="Attach document"/>
 
-    </main>
+                      {openModal === 'tests' && (
+                          <>
+                              <input name="result" required placeholder="Enter result"/>
+                              <input name="nameTest" required placeholder="Enter test name"/>
+                          </>
+                      )}
+                      {openModal === 'vaccinations' && (
+                          <>
+                              <input name="name" required placeholder="Enter vaccination name"/>
+                              <input name="nameVac" required placeholder="Enter additional name"/>
+                          </>
+                      )}
+                      <button type="submit">Save</button>
+                  </form>
+              </Box>
+          </Modal>
+
+      </main>
   );
 };
 
-
-
 const Panel = () => {
-  const [unit, setUnit] = React.useState('');
+    const [unit, setUnit] = React.useState('');
 
   let optionsUnit = [
     { id: 1, name: 'Réservations' },
@@ -190,12 +201,11 @@ const Panel = () => {
 
       <div id="linkNavig">
         <nav id="navigAncor" className="fat">
-          <div className="ancorLink">Réservations</div>
-          <div className="ancorLink">Antécédents médicaux</div>
-          <div className="ancorLink">Consultations</div>
-          <div className="ancorLink">Prescription</div>
-          <div className="ancorLink">Vaccinations</div>
-          <div className="ancorLink">Tests</div>
+            <a href="#boxBooking" className="ancorLink">Réservations</a>
+            <a href="#boxConsult" className="ancorLink">Consultations</a>
+            <a href="#boxPrescrip" className="ancorLink">Prescription</a>
+            <a href="#boxVaccin" className="ancorLink">Vaccinations</a>
+            <a href="#boxTests" className="ancorLink">Tests</a>
         </nav>
       </div>
     </>
@@ -375,37 +385,41 @@ const Info = ({ user }) => {
                     )}
                 </div>
             </div>
-        <div id="fotoInfo">
-          <div className="foto shadowFoto"></div>
-          <div className="btnSize buttonStyleDark2 fat">modifier</div>
-          <div className="lineSize fat">documents justificatifs</div>
-          <div className="addFile thin">
-            <Select
-              labelId="select-label"
-              className="simple-select-type"
-              value={type}
-              label="sélectionner le type"
-              onChange={handleChangeType}
-              required
-            >
-              {optionsType.map((item) => (
-                <MenuItem value={item.id}>{item.name}</MenuItem>
-              ))}
-            </Select>
-          </div>
-          <div className="inputFile">
-            <input
-              type="file"
-              id="textFile"
-              name="textFile"
-              accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+            <div id="fotoInfo">
+                <div class="fotoWrapper">
+                    <div class="shadowFoto"></div>
+                    <div class="foto"></div>
+                </div>
+                <div class="btnSize buttonStyleDark2 fat">modifier</div>
+                <div class="lineSize fat">documents justificatifs</div>
+                <div class="addFile thin">
+                    <Select
+                        labelId="select-label"
+                        className="simple-select-type"
+                        value={type}
+                        label="sélectionner le type"
+                        onChange={handleChangeType}
+                        required
+                    >
+                        {optionsType.map((item) => (
+                            <MenuItem value={item.id}>{item.name}</MenuItem>
+                        ))}
+                    </Select>
+                </div>
+                <div class="inputFile">
+                    <input
+                        type="file"
+                        id="textFile"
+                        name="textFile"
+                        accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
 text/plain, application/pdf, image/*"
-            />
-          </div>
-          <div className="btnSize buttonStyleDark2 fat">envoyer</div>
+                    />
+                </div>
+                <div class="btnSize buttonStyleDark2 fat">envoyer</div>
+            </div>
         </div>
-      </div>
-        {editMode && (
+
+            {editMode && (
             <button id="sendMode" className="btnSize buttonStyleDark2 fat editStyle1" onClick={handleSave}>
                 enregistrer
             </button>
