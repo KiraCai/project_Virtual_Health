@@ -13,7 +13,7 @@ export const profile = axios.get('/api/v0.1/users/profile', {
         logout;
     });
 
-const logout = () => {
+export const logout = () => {
     sessionStorage.removeItem("token");
     setUser(null);
     navigate("/api/v0.1/users/login");
