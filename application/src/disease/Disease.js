@@ -95,24 +95,54 @@ const General = () => {
 
     return (<>
         <div className="titlePersoStyle fat">Soyez attentif à votre santé</div>
-        <article className="articleHome fat">
+        <article className="articleHome thin">
             <p>
-                Lorem ipsum odor amet, consectetuer adipiscing elit. Fames cras
-                fusce duis inceptos faucibus amet nulla. Taciti aenean nam feugiat;
-                eros convallis metus. Parturient hac imperdiet taciti praesent dis
-                eu dictum euismod vitae. Duis taciti elementum sodales eleifend
-                tellus urna. Sem ultricies at a orci lacus. Consequat aliquet mauris
-                nostra eget facilisis maximus. Ornare quis ante duis laoreet morbi
-                potenti. Senectus sollicitudin nec cras enim erat nisi velit litora.
+                Vivre au Togo, c’est faire face à des défis de santé spécifiques auxquels
+                il est essentiel de prêter une attention particulière. Cinq maladies majeures
+                – le paludisme (malaria), la pneumonie, la drépanocytose, le VIH/SIDA et le diabète
+                – représentent des menaces sérieuses pour la population, tant en milieu rural qu’urbain.
             </p>
             <p>
-                Pharetra nostra bibendum ante at tellus. Lobortis condimentum augue
-                metus purus nisi ligula. Euismod mollis ac in blandit dolor risus
-                commodo cubilia. Convallis dictum ullamcorper bibendum tempor
-                dapibus tellus consequat imperdiet. Lobortis pretium sed natoque
-                magnis leo sapien posuere vitae. Volutpat ridiculus hendrerit augue
-                magnis placerat volutpat. Atincidunt ultrices leo malesuada eleifend
-                ad. Et dictum libero fermentum maecenas faucibus quam magnis risus.
+                Le paludisme reste la première cause de morbidité au Togo. Selon le Programme National
+                de Lutte contre le Paludisme, plus de 40 % des consultations dans les centres de santé
+                sont liées à cette maladie. La transmission est continue tout au long de l’année,
+                avec des pics pendant la saison des pluies. Une fièvre non traitée peut rapidement évoluer
+                vers des formes graves, surtout chez les enfants et les femmes enceintes.
+            </p>
+             <p>
+                 La pneumonie, quant à elle, est responsable de nombreuses hospitalisations infantiles.
+                 L’UNICEF rapporte qu'elle figure parmi les trois principales causes de mortalité chez les enfants
+                 de moins de 5 ans. La prévention passe par la vaccination, l’hygiène de l’air et une détection
+                 précoce des symptômes.
+             </p>
+            <p>
+                La drépanocytose (anémie falciforme) touche environ 15 à 20 % de la population togolaise
+                en tant que porteurs du gène (hétérozygotes), et environ 2 % sont atteints de la forme sévère.
+                C’est une maladie génétique incurable, mais un suivi régulier permet de réduire significativement
+                les crises et d’améliorer la qualité de vie.
+            </p>
+            <p>
+                Le VIH/SIDA reste une réalité préoccupante. Bien que le taux de prévalence ait diminué au fil des ans,
+                il est estimé à environ 2,1 % chez les adultes selon les dernières données du PNLS (Programme National
+                de Lutte contre le SIDA). Les jeunes, les femmes et les populations clés sont particulièrement vulnérables.
+            </p>
+            <p>
+                Le diabète, souvent silencieux, gagne du terrain au Togo, en lien avec l’urbanisation,
+                les changements alimentaires et le manque d’activité physique. Beaucoup de personnes ignorent
+                qu’elles en sont atteintes jusqu’à l’apparition de complications graves.
+            </p>
+            <p>
+                Pour protéger votre santé et celle de vos proches, il est crucial de faire un suivi régulier,
+                de comprendre les risques et d’agir rapidement face aux symptômes.
+
+                Sur cette page, vous pouvez :
+
+                consulter des données statistiques actualisées sur la prévalence de ces maladies au Togo ;
+
+                et réaliser des tests d’évaluation en ligne, basés sur vos symptômes et vos facteurs de risque,
+                pour mieux comprendre votre exposition potentielle à ces maladies.
+
+                Votre santé commence par la connaissance. Informez-vous, testez-vous, protégez-vous.
             </p>
         </article>
         </>);

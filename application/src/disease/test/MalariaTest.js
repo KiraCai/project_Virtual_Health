@@ -36,35 +36,68 @@ const MalariaTest = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>Âge : <input type="number" value={formData.age} onChange={e => setFormData({...formData, age: +e.target.value})} /></label><br/>
-            <label>Sexe :
-                <select onChange={e => setFormData({...formData, gender: e.target.value})}>
-                    <option value="female">Femme</option>
-                    <option value="male">Homme</option>
-                </select>
-            </label><br/>
-            <label>
-                <input type="checkbox" checked={formData.feverLast2Weeks} onChange={e => setFormData({...formData, feverLast2Weeks: e.target.checked})}/>
-                Avez-vous eu de la fièvre au cours des 2 dernières semaines ?
-            </label><br/>
-            <label>
-                <input type="checkbox" checked={formData.mosquitoBites} onChange={e => setFormData({...formData, mosquitoBites: e.target.checked})}/>
-                Avez-vous été piqué par des moustiques récemment ?
-            </label><br/>
-            <label>
-                <input type="checkbox" checked={formData.bedNetUse} onChange={e => setFormData({...formData, bedNetUse: e.target.checked})}/>
-                Utilisez-vous une moustiquaire imprégnée d'insecticide ?
-            </label><br/>
-            <label>
-                <input type="checkbox" checked={formData.travelToEndemicArea} onChange={e => setFormData({...formData, travelToEndemicArea: e.target.checked})}/>
-                Avez-vous voyagé récemment dans une zone endémique du paludisme ?
-            </label><br/>
-            <label>
-                <input type="checkbox" checked={formData.pregnancy} onChange={e => setFormData({...formData, pregnancy: e.target.checked})}/>
-                Êtes-vous enceinte ?
-            </label><br/>
-            <button type="submit">Évaluer le risque</button>
+        <form onSubmit={handleSubmit} className="testForm">
+            <div className="input-box-test">
+                <label>Âge :
+                    <input className="inputTest" type="number" value={formData.age}
+                           onChange={e => setFormData({...formData, age: +e.target.value})} />
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>Sexe :
+                    <select className="input-box-choise" value={formData.gender}
+                            onChange={e => setFormData({...formData, gender: e.target.value})}>
+                        <option value="female">Femme</option>
+                        <option value="male">Homme</option>
+                    </select>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.feverLast2Weeks}
+                           onChange={e => setFormData({...formData, feverLast2Weeks: e.target.checked})} />
+                    Avez-vous eu de la fièvre au cours des 2 dernières semaines ?
+                </label>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.mosquitoBites}
+                           onChange={e => setFormData({...formData, mosquitoBites: e.target.checked})} />
+                    Avez-vous été piqué par des moustiques récemment ?
+                </label>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.bedNetUse}
+                           onChange={e => setFormData({...formData, bedNetUse: e.target.checked})} />
+                    Utilisez-vous une moustiquaire imprégnée d'insecticide ?
+                </label>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.travelToEndemicArea}
+                           onChange={e => setFormData({...formData, travelToEndemicArea: e.target.checked})} />
+                    Avez-vous voyagé récemment dans une zone endémique du paludisme ?
+                </label>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.pregnancy}
+                           onChange={e => setFormData({...formData, pregnancy: e.target.checked})} />
+                    Êtes-vous enceinte ?
+                    </label>
+                </label>
+            </div>
+            <button type="submit" className="btn buttonStyleDark fat btnTest">Évaluer le risque</button>
             <p><em>⚠ Ceci n'est pas un diagnostic médical. Pour une évaluation précise, consultez un professionnel de santé.</em></p>
         </form>
     );

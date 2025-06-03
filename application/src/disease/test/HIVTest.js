@@ -35,31 +35,59 @@ const HIVTest = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>Âge : <input type="number" value={formData.age} onChange={e => setFormData({...formData, age: +e.target.value})} /></label><br/>
-            <label>Sexe :
-                <select onChange={e => setFormData({...formData, gender: e.target.value})}>
-                    <option value="female">Femme</option>
-                    <option value="male">Homme</option>
-                </select>
-            </label><br/>
-            <label>
-                <input type="checkbox" checked={formData.multiplePartners} onChange={e => setFormData({...formData, multiplePartners: e.target.checked})}/>
-                Avez-vous plusieurs partenaires sexuels ?
-            </label><br/>
-            <label>
-                <input type="checkbox" checked={formData.stiHistory} onChange={e => setFormData({...formData, stiHistory: e.target.checked})}/>
-                Avez-vous des antécédents d'IST (infections sexuellement transmissibles) ?
-            </label><br/>
-            <label>
-                <input type="checkbox" checked={formData.drugUse} onChange={e => setFormData({...formData, drugUse: e.target.checked})}/>
-                Utilisez-vous des drogues injectables ?
-            </label><br/>
-            <label>
-                <input type="checkbox" checked={formData.hivPositivePartner} onChange={e => setFormData({...formData, hivPositivePartner: e.target.checked})}/>
-                Avez-vous un partenaire séropositif ?
-            </label><br/>
-            <button type="submit">Évaluer le risque</button>
+        <form onSubmit={handleSubmit} className="testForm">
+            <div className="input-box-test">
+                <label>Âge :
+                    <input className="inputTest" type="number" value={formData.age}
+                           onChange={e => setFormData({ ...formData, age: +e.target.value })} />
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>Sexe :
+                    <select className="input-box-choise" value={formData.gender}
+                            onChange={e => setFormData({ ...formData, gender: e.target.value })}>
+                        <option value="female">Femme</option>
+                        <option value="male">Homme</option>
+                    </select>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.multiplePartners}
+                           onChange={e => setFormData({ ...formData, multiplePartners: e.target.checked })} />
+                    Avez-vous plusieurs partenaires sexuels ?
+                </label>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.stiHistory}
+                           onChange={e => setFormData({ ...formData, stiHistory: e.target.checked })} />
+                    Avez-vous des antécédents d'IST (infections sexuellement transmissibles) ?
+                </label>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.drugUse}
+                           onChange={e => setFormData({ ...formData, drugUse: e.target.checked })} />
+                    Utilisez-vous des drogues injectables ?
+                </label>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.hivPositivePartner}
+                           onChange={e => setFormData({ ...formData, hivPositivePartner: e.target.checked })} />
+                    Avez-vous un partenaire séropositif ?
+                </label>
+                </label>
+            </div>
+            <button type="submit" className="btn buttonStyleDark fat btnTest">Évaluer le risque</button>
             <p><em>⚠ Ceci n'est pas un diagnostic médical. Pour une évaluation précise, consultez un professionnel de santé.</em></p>
         </form>
     );

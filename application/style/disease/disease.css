@@ -96,6 +96,7 @@ input-box-choise, option:checked {
 	color: var(--super-dark-color);
 }
 
-.inputTest {
+input:valid:not(.btn), .inputTest {
 	background-color: rgb(225, 225, 225);
+	z-index: 30;
 }

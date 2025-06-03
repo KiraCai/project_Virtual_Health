@@ -37,20 +37,62 @@ const DiabetesTest = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>Âge : <input type="number" value={formData.age} onChange={e => setFormData({...formData, age: +e.target.value})} /></label><br/>
-            <label>Sexe :
-                <select onChange={e => setFormData({...formData, gender: e.target.value})}>
-                    <option value="female">Femme</option>
-                    <option value="male">Homme</option>
-                </select>
-            </label><br/>
-            <label><input type="checkbox" checked={formData.familyHistory} onChange={e => setFormData({...formData, familyHistory: e.target.checked})}/> Avez-vous des antécédents familiaux de diabète ?</label><br/>
-            <label><input type="checkbox" checked={formData.hypertension} onChange={e => setFormData({...formData, hypertension: e.target.checked})}/> Avez-vous été diagnostiqué(e) avec de l'hypertension ?</label><br/>
-            <label><input type="checkbox" checked={!formData.physicallyActive} onChange={e => setFormData({...formData, physicallyActive: !e.target.checked})}/> Êtes-vous physiquement inactif/inactive ?</label><br/>
-            <label>Taille (cm) : <input type="number" value={formData.height} onChange={e => setFormData({...formData, height: +e.target.value})} /></label><br/>
-            <label>Poids (kg) : <input type="number" value={formData.weight} onChange={e => setFormData({...formData, weight: +e.target.value})} /></label><br/>
-            <button type="submit">Évaluer le risque</button>
+        <form onSubmit={handleSubmit} className="testForm">
+            <div className="input-box-test">
+                <label>Âge :
+                    <input className="inputTest" type="number" value={formData.age}
+                           onChange={e => setFormData({ ...formData, age: +e.target.value })} />
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>Sexe :
+                    <select className="input-box-choise" value={formData.gender}
+                            onChange={e => setFormData({ ...formData, gender: e.target.value })}>
+                        <option value="female">Femme</option>
+                        <option value="male">Homme</option>
+                    </select>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.familyHistory}
+                           onChange={e => setFormData({ ...formData, familyHistory: e.target.checked })} />
+                    Avez-vous des antécédents familiaux de diabète ?
+                </label>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={formData.hypertension}
+                           onChange={e => setFormData({ ...formData, hypertension: e.target.checked })} />
+                    Avez-vous été diagnostiqué(e) avec de l'hypertension ?
+                </label>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>
+                    <label>
+                    <input type="checkbox" className="checkbox-test" checked={!formData.physicallyActive}
+                           onChange={e => setFormData({ ...formData, physicallyActive: !e.target.checked })} />
+                    Êtes-vous physiquement inactif/inactive ?
+                </label>
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>Taille (cm) :
+                    <input className="inputTest" type="number" value={formData.height}
+                           onChange={e => setFormData({ ...formData, height: +e.target.value })} />
+                </label>
+            </div>
+            <div className="input-box-test">
+                <label>Poids (kg) :
+                    <input className="inputTest" type="number" value={formData.weight}
+                           onChange={e => setFormData({ ...formData, weight: +e.target.value })} />
+                </label>
+            </div>
+            <button type="submit" className="btn buttonStyleDark fat btnTest">Évaluer le risque</button>
             <p><em>⚠ Ceci n'est pas un diagnostic médical. Consultez un médecin pour une évaluation précise.</em></p>
         </form>
     );
