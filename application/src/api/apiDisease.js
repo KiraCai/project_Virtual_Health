@@ -8,7 +8,7 @@ export const fetchDiseases = async () => {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
         });
-        return response.data; // Ожидается, что данные - это массив болезней
+        return response.data;
     } catch (error) {
         sessionStorage.removeItem("token");
         logout();

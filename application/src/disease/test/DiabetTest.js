@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+
 const DiabetesTest = () => {
     const [formData, setFormData] = useState({
         age: 0,
@@ -18,41 +19,39 @@ const DiabetesTest = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${sessionStorage.getItem("token")}` // Добавьте токен
+                    "Authorization": `Bearer ${sessionStorage.getItem("token")}`
                 },
                 body: JSON.stringify(formData)
             });
 
             if (!res.ok) {
-                throw new Error(`Ошибка: ${res.status}`); // Обработка ошибок
+                throw new Error(`Erreur : ${res.status}`);
             }
 
             const data = await res.json();
-            alert(`Ваш риск диабета: ${data.risk}`);
+            alert(`Votre risque de diabète : ${data.risk}`);
         } catch (error) {
-            console.error("Ошибка отправки данных:", error);
-            alert("Ошибка при обработке запроса. Проверьте данные и попробуйте снова.");
+            console.error("Erreur lors de l'envoi des données :", error);
+            alert("Une erreur s'est produite. Veuillez vérifier vos données et réessayer.");
         }
     };
 
-
     return (
         <form onSubmit={handleSubmit}>
-            <label>Возраст: <input type="number" value={formData.age} onChange={e => setFormData({...formData, age: +e.target.value})} /></label><br/>
-            <label>Пол:
+            <label>Âge : <input type="number" value={formData.age} onChange={e => setFormData({...formData, age: +e.target.value})} /></label><br/>
+            <label>Sexe :
                 <select onChange={e => setFormData({...formData, gender: e.target.value})}>
-                    <option value="female">Женщина</option>
-                    <option value="male">Мужчина</option>
+                    <option value="female">Femme</option>
+                    <option value="male">Homme</option>
                 </select>
             </label><br/>
-            <label><input type="checkbox" checked={formData.familyHistory} onChange={e => setFormData({...formData, familyHistory: e.target.checked})}/> Есть ли в семье диабет?</label><br/>
-            <label><input type="checkbox" checked={formData.hypertension} onChange={e => setFormData({...formData, hypertension: e.target.checked})}/> Диагностировали ли у вас гипертонию?</label><br/>
-            <label><input type="checkbox" checked={!formData.physicallyActive} onChange={e => setFormData({...formData, physicallyActive: !e.target.checked})}/> Вы не физически активны?</label><br/>
-            <label>Рост (см): <input type="number" value={formData.height} onChange={e => setFormData({...formData, height: +e.target.value})} /></label><br/>
-            <label>Вес (кг): <input type="number" value={formData.weight} onChange={e => setFormData({...formData, weight: +e.target.value})} /></label><br/>
-            <button type="submit">Оценить риск</button>
-            <p><em>⚠ Это не медицинский диагноз. Для точной оценки обратитесь к врачу.</em></p>
-
+            <label><input type="checkbox" checked={formData.familyHistory} onChange={e => setFormData({...formData, familyHistory: e.target.checked})}/> Avez-vous des antécédents familiaux de diabète ?</label><br/>
+            <label><input type="checkbox" checked={formData.hypertension} onChange={e => setFormData({...formData, hypertension: e.target.checked})}/> Avez-vous été diagnostiqué(e) avec de l'hypertension ?</label><br/>
+            <label><input type="checkbox" checked={!formData.physicallyActive} onChange={e => setFormData({...formData, physicallyActive: !e.target.checked})}/> Êtes-vous physiquement inactif/inactive ?</label><br/>
+            <label>Taille (cm) : <input type="number" value={formData.height} onChange={e => setFormData({...formData, height: +e.target.value})} /></label><br/>
+            <label>Poids (kg) : <input type="number" value={formData.weight} onChange={e => setFormData({...formData, weight: +e.target.value})} /></label><br/>
+            <button type="submit">Évaluer le risque</button>
+            <p><em>⚠ Ceci n'est pas un diagnostic médical. Consultez un médecin pour une évaluation précise.</em></p>
         </form>
     );
 };
