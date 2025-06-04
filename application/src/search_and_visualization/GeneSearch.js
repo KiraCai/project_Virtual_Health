@@ -15,6 +15,9 @@ const GeneSearchForm = ({ onResult }) => {
                 }
             });
             console.log('Ответ от сервера:', res.data);
+            console.log(res.data.articles, res.data.proteins);
+            console.log("protein", JSON.stringify(res.data.proteins, null, 2));
+
             onResult(res.data);
         } catch (error) {
             console.error("Ошибка при поиске:", error);
@@ -52,7 +55,7 @@ const SearchResults = ({ articles = [], proteins = [] }) => (
         <ul>
             {proteins.map((protein, index) => (
                 <li key={index}>
-                    {protein.name} - <a href={`https://www.uniprot.org/uniprot/${protein.uniprotId}`} target="_blank" rel="noopener noreferrer">Подробнее</a>
+                    {protein.name} - <a href={`https://www.uniprot.org/uniprot/${protein.primaryAccession}`} target="_blank" rel="noopener noreferrer">Подробнее</a>
                 </li>
             ))}
         </ul>
