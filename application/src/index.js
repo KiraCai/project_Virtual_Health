@@ -11,6 +11,7 @@ import Search from './Search';
 import ChooseDoc from './ChooseDoc';
 import PersonalAcc from './personal/PersonalAcc';
 import Test from './disease/Test'
+import GeneSearch from './search_and_visualization/GeneSearch'
 
 
 import '../style/personal/index.css';
@@ -40,6 +41,7 @@ root.render(
                 <Route path="disease" element={<Disease/>}/>
                 <Route path="choosingDoc" element={<ChooseDoc/>}/>
                 <Route path="test" element={<Test/>}/>
+                <Route path="visualization" element={<GeneSearch/>}/>
             </Route>
         </Routes>
         <Basement/>
