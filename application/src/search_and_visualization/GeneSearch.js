@@ -202,6 +202,7 @@ const SearchResults = ({articles = [], proteins = [], selectedCrossPdbId, setSel
                                                 <p>
                                                     <strong>{c.disease?.diseaseId || "Sans titre"}</strong> ({c.disease?.acronym})
                                                 </p>
+
                                                 <p>{c.disease?.description}</p>
                                                 {c.disease?.diseaseCrossReference && (
                                                     <p>

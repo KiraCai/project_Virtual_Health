@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Stage } from 'ngl';
 
+
 const ProteinViewer = ({ pdbId }) => {
 
     const viewerRef = useRef(null);
