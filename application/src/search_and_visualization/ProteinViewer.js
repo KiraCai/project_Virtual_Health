@@ -18,7 +18,9 @@ const ProteinViewer = ({ pdbId }) => {
             stageRef.current = new Stage(viewerRef.current);
         }
 
-        stageRef.current.loadFile(`rcsb://${pdbId}`, { defaultRepresentation: true });
+        stageRef.current.loadFile(`https://files.rcsb.org/download/${pdbId}.pdb`, {
+            defaultRepresentation: true
+        });
 
         return () => {
             if (stageRef.current) {

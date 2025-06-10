@@ -3,7 +3,7 @@ import axios from 'axios';
 import ProteinViewer from './ProteinViewer';
 import {hexToRgb} from "@mui/material";
 
-const PdbViewer = ({crossRefPdbIds, setSelectedCrossPdbId}) => {
+/*const PdbViewer = ({crossRefPdbIds, setSelectedCrossPdbId}) => {
     const [selectedPdbId, setSelectedPdbId] = useState(crossRefPdbIds?.[0] || '');
 
     if (!crossRefPdbIds || crossRefPdbIds.length === 0) return null;
@@ -32,12 +32,12 @@ const PdbViewer = ({crossRefPdbIds, setSelectedCrossPdbId}) => {
             </button>
         </div>
     );
-};
+};*/
 
 
 const GeneSearchForm = ({onResult}) => {
     const [query, setQuery] = useState('');
-    const [selectedCrossPdbId, setSelectedCrossPdbId] = useState(null);
+    //const [selectedCrossPdbId, setSelectedCrossPdbId] = useState(null);
 
     const handleSearch = async () => {
         //const token = sessionStorage.getItem("token");
@@ -72,7 +72,7 @@ const GeneSearchForm = ({onResult}) => {
     );
 };
 
-const SearchResults = ({articles = [], proteins = [], selectedCrossPdbId, setSelectedCrossPdbId}) => {
+const SearchResults = ({articles = [], proteins = []}) => {
 
     return (
 
@@ -98,6 +98,7 @@ const SearchResults = ({articles = [], proteins = [], selectedCrossPdbId, setSel
             <ul>
                 {proteins.map((protein, index) => {
 
+                    const [localSelectedPdbId, setLocalSelectedPdbId] = useState(null);
 
                     const crossRefPdbIds = protein.uniProtKBCrossReferences
                         ?.filter(ref => ref.database === "PDB")
@@ -164,15 +165,26 @@ const SearchResults = ({articles = [], proteins = [], selectedCrossPdbId, setSel
                                 References):</strong> {crossRefPdbIds?.length > 0 ? crossRefPdbIds.join(', ') : "Aucune donnée"}
                             </p>
 
-                            <PdbViewer
-                                crossRefPdbIds={crossRefPdbIds}
-                                setSelectedCrossPdbId={setSelectedCrossPdbId}
-                            />
 
-                            {selectedCrossPdbId && (
-                                <div style={{marginTop: '20px'}}>
-                                    <h4>Visualisation des protéine: {selectedCrossPdbId}</h4>
-                                    <ProteinViewer pdbId={selectedCrossPdbId}/>
+                            {crossRefPdbIds?.length > 0 && (
+                                <div>
+                                    <label>Sélectionnez PDB ID:&nbsp;
+                                        <select
+                                            onChange={(e) => setLocalSelectedPdbId(e.target.value)}
+                                        >
+                                            <option value="">-- Choisir --</option>
+                                            {crossRefPdbIds.map(id => (
+                                                <option key={id} value={id}>{id}</option>
+                                            ))}
+                                        </select>
+                                    </label>
+                                </div>
+                            )}
+
+                            {localSelectedPdbId && (
+                                <div style={{ marginTop: '10px' }}>
+                                    <strong>Structure 3D pour {localSelectedPdbId}</strong>
+                                    <ProteinViewer pdbId={localSelectedPdbId} />
                                 </div>
                             )}
 
@@ -222,7 +234,7 @@ const SearchResults = ({articles = [], proteins = [], selectedCrossPdbId, setSel
 };
 
 const GeneSearch = () => {
-    const [selectedCrossPdbId, setSelectedCrossPdbId] = useState(null);
+    //const [selectedCrossPdbId, setSelectedCrossPdbId] = useState(null);
     const [results, setResults] = useState(null);
 
     const handleResult = (data) => {
@@ -235,8 +247,8 @@ const GeneSearch = () => {
             {results && <SearchResults
                 articles={results.articles || []}
                 proteins={results.proteins || []}
-                selectedCrossPdbId={selectedCrossPdbId}
-                setSelectedCrossPdbId={setSelectedCrossPdbId}
+                /*selectedCrossPdbId={selectedCrossPdbId}
+                setSelectedCrossPdbId={setSelectedCrossPdbId}*/
 
             />}
         </div>
