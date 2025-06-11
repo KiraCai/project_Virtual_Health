@@ -42,6 +42,14 @@ const GeneSearchForm = ({onResult}) => {
 const SearchResults = ({articles = [], proteins = []}) => {
     const [highlightPos, setHighlightPos] = useState(null);
     const [showAll, setShowAll] = useState(false);
+    const [selectedPositions, setSelectedPositions] = useState([]);
+    const toggleHighlight = (pos) => {
+        setShowAll(false);
+        setSelectedPositions(prev =>
+            prev.includes(pos) ? prev.filter(p => p !== pos) : [...prev, pos]
+        );
+    };
+
 
 
     return (
@@ -69,7 +77,15 @@ const SearchResults = ({articles = [], proteins = []}) => {
                 {proteins.map((protein, index) => {
 
                     const [localSelectedPdbId, setLocalSelectedPdbId] = useState(null);
-                    const pathogenicVariants = protein.variants || [];
+                    //const pathogenicVariants = protein.features || [];
+
+                    const pathogenicVariants = (protein.features || []).filter(f =>
+                        Array.isArray(f.association) &&
+                        f.association.some(a => a.disease === true)
+                    );
+
+
+
 
 
                     const crossRefPdbIds = protein.uniProtKBCrossReferences
@@ -185,16 +201,29 @@ const SearchResults = ({articles = [], proteins = []}) => {
                             )}
 
                             <h4>Патогенные мутации:</h4>
-                            <ul>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", maxWidth: "800px" }}>
                                 {pathogenicVariants.map((v, idx) => (
-                                    <li key={idx}>
-                                        {v.original}{v.begin}{v.variation} — {v.description}
-                                        <button onClick={() => highlightMutation(v.begin)}>Показать на 3D</button>
-                                    </li>
+                                    <div key={idx} style={{
+                                        border: "1px solid gray",
+                                        borderRadius: "8px",
+                                        padding: "6px 10px",
+                                        backgroundColor: selectedPositions.includes(v.begin) ? "#ffcccc" : "#f9f9f9",
+                                        cursor: "pointer"
+                                    }} title={v.description || "pathogenic mutation"} onClick={() => toggleHighlight(v.begin)}>
+                                        {v.begin} — {v.original}{v.begin}{v.variation}
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
 
-                            <button onClick={() => showAllPathogenic(pathogenicVariants)}>Показать все мутации</button>
+
+                            <div style={{ marginTop: "10px" }}>
+                                <button onClick={() => setSelectedPositions([])}>Сбросить</button>
+                                <button onClick={() => {
+                                    const all = pathogenicVariants.map(v => v.begin);
+                                    setSelectedPositions([...new Set(all)]);
+                                    setShowAll(false);
+                                }}>Показать все</button>
+                            </div>
 
 
                             {pdbIds.length > 0 && (
@@ -217,7 +246,7 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                     <strong>Structure 3D pour {localSelectedPdbId}</strong>
                                     <ProteinViewer pdbId={localSelectedPdbId}
                                                    variants={pathogenicVariants}
-                                                   highlightPos={highlightPos}
+                                                   highlightPos={showAll ? pathogenicVariants.map(v => v.begin) : selectedPositions}
                                                    showAll={showAll}/>
                                 </div>
                             )}
