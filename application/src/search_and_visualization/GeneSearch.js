@@ -1,43 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import ProteinViewer from './ProteinViewer';
-import {hexToRgb} from "@mui/material";
-
-/*const PdbViewer = ({crossRefPdbIds, setSelectedCrossPdbId}) => {
-    const [selectedPdbId, setSelectedPdbId] = useState(crossRefPdbIds?.[0] || '');
-
-    if (!crossRefPdbIds || crossRefPdbIds.length === 0) return null;
-
-    return (
-        <div>
-            <label>
-                Sélectionnez PDB ID:&nbsp;
-                <select
-                    value={selectedPdbId}
-                    onChange={(e) => setSelectedPdbId(e.target.value)}
-                >
-                    {crossRefPdbIds.map((id) => (
-                        <option key={id} value={id}>
-                            {id}
-                        </option>
-                    ))}
-                </select>
-            </label>
-
-            <button
-                onClick={() => setSelectedCrossPdbId(selectedPdbId)}
-                style={{marginLeft: '10px'}}
-            >
-                Afficher la structure 3D
-            </button>
-        </div>
-    );
-};*/
-
 
 const GeneSearchForm = ({onResult}) => {
     const [query, setQuery] = useState('');
-    //const [selectedCrossPdbId, setSelectedCrossPdbId] = useState(null);
+
 
     const handleSearch = async () => {
         //const token = sessionStorage.getItem("token");
@@ -73,6 +40,9 @@ const GeneSearchForm = ({onResult}) => {
 };
 
 const SearchResults = ({articles = [], proteins = []}) => {
+    const [highlightPos, setHighlightPos] = useState(null);
+    const [showAll, setShowAll] = useState(false);
+
 
     return (
 
@@ -99,10 +69,35 @@ const SearchResults = ({articles = [], proteins = []}) => {
                 {proteins.map((protein, index) => {
 
                     const [localSelectedPdbId, setLocalSelectedPdbId] = useState(null);
+                    const pathogenicVariants = protein.variants || [];
+
 
                     const crossRefPdbIds = protein.uniProtKBCrossReferences
                         ?.filter(ref => ref.database === "PDB")
-                        ?.map(ref => ref.id);
+                        ?.map(ref => {
+                            const method = ref.properties?.find(p => p.key === "Method")?.value || "—";
+                            const resolution = ref.properties?.find(p => p.key === "Resolution")?.value || "—";
+                            const chains = ref.properties?.find(p => p.key === "Chains")?.value || "—";
+                            return {
+                                id: ref.id,
+                                method,
+                                resolution,
+                                chains
+                            };
+                        });
+
+                    const pdbIds = crossRefPdbIds?.map(pdb => pdb.id) || [];
+
+                    const highlightMutation = (position) => {
+                        setHighlightPos(position);
+                        setShowAll(false); // выключить режим всех мутаций
+                    };
+
+                    const showAllPathogenic = (pathogenicVariants) => {
+                        setHighlightPos(null);
+                        setShowAll(true);
+                    };
+
 
                     return (
                         <li key={index}>
@@ -161,19 +156,55 @@ const SearchResults = ({articles = [], proteins = []}) => {
                             </pre>
                             </div>
 
-                            <p><strong>PDB ID (à partir de cross
-                                References):</strong> {crossRefPdbIds?.length > 0 ? crossRefPdbIds.join(', ') : "Aucune donnée"}
-                            </p>
+                            {crossRefPdbIds.length > 0 ? (
+                                <div>
+                                    <strong>Structures PDB (из UniProt):</strong>
+                                    <table border="1" cellPadding="5" style={{ marginTop: "10px", borderCollapse: "collapse" }}>
+                                        <thead>
+                                        <tr>
+                                            <th>PDB ID</th>
+                                            <th>Method</th>
+                                            <th>Resolution</th>
+                                            <th>Chains</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {crossRefPdbIds.map((pdb, idx) => (
+                                            <tr key={idx}>
+                                                <td>{pdb.id}</td>
+                                                <td>{pdb.method}</td>
+                                                <td>{pdb.resolution}</td>
+                                                <td>{pdb.chains}</td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <p><strong>PDB:</strong> Aucune donnée</p>
+                            )}
+
+                            <h4>Патогенные мутации:</h4>
+                            <ul>
+                                {pathogenicVariants.map((v, idx) => (
+                                    <li key={idx}>
+                                        {v.original}{v.begin}{v.variation} — {v.description}
+                                        <button onClick={() => highlightMutation(v.begin)}>Показать на 3D</button>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <button onClick={() => showAllPathogenic(pathogenicVariants)}>Показать все мутации</button>
 
 
-                            {crossRefPdbIds?.length > 0 && (
+                            {pdbIds.length > 0 && (
                                 <div>
                                     <label>Sélectionnez PDB ID:&nbsp;
                                         <select
                                             onChange={(e) => setLocalSelectedPdbId(e.target.value)}
                                         >
                                             <option value="">-- Choisir --</option>
-                                            {crossRefPdbIds.map(id => (
+                                            {pdbIds.map(id => (
                                                 <option key={id} value={id}>{id}</option>
                                             ))}
                                         </select>
@@ -184,7 +215,10 @@ const SearchResults = ({articles = [], proteins = []}) => {
                             {localSelectedPdbId && (
                                 <div style={{ marginTop: '10px' }}>
                                     <strong>Structure 3D pour {localSelectedPdbId}</strong>
-                                    <ProteinViewer pdbId={localSelectedPdbId} />
+                                    <ProteinViewer pdbId={localSelectedPdbId}
+                                                   variants={pathogenicVariants}
+                                                   highlightPos={highlightPos}
+                                                   showAll={showAll}/>
                                 </div>
                             )}
 
@@ -234,7 +268,6 @@ const SearchResults = ({articles = [], proteins = []}) => {
 };
 
 const GeneSearch = () => {
-    //const [selectedCrossPdbId, setSelectedCrossPdbId] = useState(null);
     const [results, setResults] = useState(null);
 
     const handleResult = (data) => {
@@ -247,9 +280,6 @@ const GeneSearch = () => {
             {results && <SearchResults
                 articles={results.articles || []}
                 proteins={results.proteins || []}
-                /*selectedCrossPdbId={selectedCrossPdbId}
-                setSelectedCrossPdbId={setSelectedCrossPdbId}*/
-
             />}
         </div>
     );
