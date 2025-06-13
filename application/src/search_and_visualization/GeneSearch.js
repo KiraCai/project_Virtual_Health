@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import ProteinViewer from './ProteinViewer';
+import { calculateConservationMutationCorrelationScore } from './utils';
+import ProteinVisualizationWithScore from "./ProteinVisualizationWithScore";
 
 const GeneSearchForm = ({onResult}) => {
     const [query, setQuery] = useState('');
-
 
     const handleSearch = async () => {
         //const token = sessionStorage.getItem("token");
@@ -18,7 +19,6 @@ const GeneSearchForm = ({onResult}) => {
             console.log('Réponse du serveur:', res.data);
             console.log('Articles', res.data.articles); //res.data.proteins
             console.log("protein", JSON.stringify(res.data.proteins, null, 2));
-            //console.log("articles", JSON.stringify(res.data.articles, null, 2));
             onResult(res.data);
         } catch (error) {
             console.error("Erreur lors de la recherche:", error);
@@ -40,23 +40,7 @@ const GeneSearchForm = ({onResult}) => {
 };
 
 const SearchResults = ({articles = [], proteins = []}) => {
-    //const [highlightPos, setHighlightPos] = useState(null);
-    /*const [showAll, setShowAll] = useState(false);
-    const [selectedPositions, setSelectedPositions] = useState([]);
-    const [localSelectedPdbId, setLocalSelectedPdbId] = useState(null);*/
     const [selectedStates, setSelectedStates] = useState({});
-
-
-
-    /*const toggleHighlight = (pos) => {
-        console.log("Клик по позиции:", pos);
-        setShowAll(false);
-        setSelectedPositions(prev => {
-            const newPositions = prev.includes(pos) ? prev.filter(p => p !== pos) : [...prev, pos];
-            console.log("Новое selectedPositions:", newPositions);
-            return newPositions;
-        });
-    };*/
 
     const toggleHighlight = (accession, pos) => {
         setSelectedStates(prev => {
@@ -100,7 +84,6 @@ const SearchResults = ({articles = [], proteins = []}) => {
     };
 
 
-
     return (
 
         <div>
@@ -124,13 +107,12 @@ const SearchResults = ({articles = [], proteins = []}) => {
             <h3>Protéines:</h3>
             <ul>
                 {proteins.map((protein, index) => {
-                    //тут? я правильно добавила
+
                     const state = selectedStates[protein.primaryAccession] || {
                         selectedPositions: [],
                         showAll: false,
                         pdbId: ''
                     };
-                    //const [localSelectedPdbId, setLocalSelectedPdbId] = useState(null);
                     const pathogenicVariants = (protein.features || []).filter(f =>
                         Array.isArray(f.association) &&
                         f.association.some(a => a.disease === true)
@@ -264,7 +246,6 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                 <button onClick={() => {
                                     const all = pathogenicVariants.map(v => v.begin);
                                     showAllMutations(protein.primaryAccession, pathogenicVariants);
-                                    setShowAll(false);
                                 }}>Показать все</button>
                             </div>
 
@@ -318,6 +299,14 @@ const SearchResults = ({articles = [], proteins = []}) => {
 
 
                                     </div>
+                                    <ul>
+                                        {proteins.map((protein, index) => (
+                                            <li key={index}>
+                                                <ProteinVisualizationWithScore protein={protein} pathogenic={pathogenicVariants} />
+                                            </li>
+                                        ))}
+                                    </ul>
+
                                     <div>
                                         <strong>Выделенные мутации:</strong>
                                         <ul>
@@ -399,5 +388,6 @@ const GeneSearch = () => {
 };
 
 export default GeneSearch;
+
 
 
