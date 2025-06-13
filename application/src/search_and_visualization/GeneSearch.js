@@ -41,11 +41,14 @@ const GeneSearchForm = ({onResult}) => {
 
 const SearchResults = ({articles = [], proteins = []}) => {
     //const [highlightPos, setHighlightPos] = useState(null);
-    const [showAll, setShowAll] = useState(false);
+    /*const [showAll, setShowAll] = useState(false);
     const [selectedPositions, setSelectedPositions] = useState([]);
-    const [localSelectedPdbId, setLocalSelectedPdbId] = useState(null);
+    const [localSelectedPdbId, setLocalSelectedPdbId] = useState(null);*/
+    const [selectedStates, setSelectedStates] = useState({});
 
-    const toggleHighlight = (pos) => {
+
+
+    /*const toggleHighlight = (pos) => {
         console.log("Клик по позиции:", pos);
         setShowAll(false);
         setSelectedPositions(prev => {
@@ -53,6 +56,47 @@ const SearchResults = ({articles = [], proteins = []}) => {
             console.log("Новое selectedPositions:", newPositions);
             return newPositions;
         });
+    };*/
+
+    const toggleHighlight = (accession, pos) => {
+        setSelectedStates(prev => {
+            const current = prev[accession] || { };
+            const selected = Array.isArray(current.selectedPositions)
+                ? current.selectedPositions
+                : [];
+            const newPositions = selected.includes(pos)
+                ? selected.filter(p => p !== pos)
+                : [...selected, pos];
+            return {
+                ...prev,
+                [accession]: { ...current, selectedPositions: newPositions, pdbId: current.pdbId || "", showAll: false }
+            };
+        });
+    };
+
+    const selectPdb = (accession, pdbId) => {
+        setSelectedStates(prev => ({
+            ...prev,
+            [accession]: { ...(prev[accession] || {}), pdbId }
+        }));
+    };
+
+    const resetSelection = (accession) => {
+        setSelectedStates(prev => ({
+            ...prev,
+            [accession]: { ...(prev[accession] || {}), selectedPositions: [], showAll: false }
+        }));
+    };
+
+    const showAllMutations = (accession, variants) => {
+        setSelectedStates(prev => ({
+            ...prev,
+            [accession]: {
+                ...(prev[accession] || {}),
+                selectedPositions: [...new Set(variants.map(v => v.begin))],
+                showAll: true
+            }
+        }));
     };
 
 
@@ -80,6 +124,12 @@ const SearchResults = ({articles = [], proteins = []}) => {
             <h3>Protéines:</h3>
             <ul>
                 {proteins.map((protein, index) => {
+                    //тут? я правильно добавила
+                    const state = selectedStates[protein.primaryAccession] || {
+                        selectedPositions: [],
+                        showAll: false,
+                        pdbId: ''
+                    };
                     //const [localSelectedPdbId, setLocalSelectedPdbId] = useState(null);
                     const pathogenicVariants = (protein.features || []).filter(f =>
                         Array.isArray(f.association) &&
@@ -193,16 +243,16 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                 {pathogenicVariants.map((v, idx) => {
                                     const label = `${v.original}${v.begin}${v.variation}`;
                                     const tooltip = `Позиция: ${v.begin}, ${v.original} → ${v.variation} (${v.mutatedType || 'n/a'}), ${v.somaticStatus ? 'somatic' : 'inherited'}`;
-                                    const isSelected = selectedPositions.includes(v.begin);
+                                    const isSelected = state?.selectedPositions?.includes(v.begin);
                                     return (
                                         <div key={idx} style={{
                                             border: "1px solid gray",
                                             borderRadius: "8px",
                                             padding: "6px 10px",
-                                            backgroundColor: selectedPositions.includes(v.begin) ? "#ffcccc" : "#f9f9f9",
+                                            backgroundColor: state?.selectedPositions?.includes(v.begin) ? "#ffcccc" : "#f9f9f9",
                                             cursor: "pointer"
                                         }} title={v.description || "pathogenic mutation"}
-                                             onClick={() => toggleHighlight(v.begin)}>
+                                             onClick={() => toggleHighlight(protein.primaryAccession, v.begin)}>
                                             {v.begin} — {v.original}{v.begin}{v.variation}
                                         </div>)
                                 })}
@@ -210,10 +260,10 @@ const SearchResults = ({articles = [], proteins = []}) => {
 
 
                             <div style={{ marginTop: "10px" }}>
-                                <button onClick={() => setSelectedPositions([])}>Сбросить</button>
+                                <button onClick={() => resetSelection(protein.primaryAccession)}>Сбросить</button>
                                 <button onClick={() => {
                                     const all = pathogenicVariants.map(v => v.begin);
-                                    setSelectedPositions([...new Set(all)]);
+                                    showAllMutations(protein.primaryAccession, pathogenicVariants);
                                     setShowAll(false);
                                 }}>Показать все</button>
                             </div>
@@ -223,7 +273,8 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                 <div>
                                     <label>Sélectionnez PDB ID:&nbsp;
                                         <select
-                                            onChange={(e) => setLocalSelectedPdbId(e.target.value)}
+                                            value={state.pdbId || ''}
+                                            onChange={(e) => selectPdb(protein.primaryAccession, e.target.value)}
                                         >
                                             <option value="">-- Choisir --</option>
                                             {pdbIds.map(id => (
@@ -234,27 +285,31 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                 </div>
                             )}
 
-                            {localSelectedPdbId && (
+                            {state.pdbId && (
                                 <div style={{display: 'flex', gap: '20px', marginTop: '10px'}}>
                                     <div>
                                         {(() => {
-                                            const selectedPdbData = crossRefPdbIds.find(pdb => pdb.id === localSelectedPdbId);
+                                            const selectedPdbData = crossRefPdbIds.find(pdb => pdb.id === state.pdbId);
+
+                                            if (!selectedPdbData) {
+                                                return <p>Данные для PDB ID {state.pdbId} не найдены.</p>;
+                                            }
                                             const rawChain = selectedPdbData.chains;
                                             const chains = rawChain.split('=')[0].split('/');
                                             const firstChain = chains[0];
                                             return (
                                                 <>
                                                 <strong>
-                                                    Structure 3D pour {localSelectedPdbId}
+                                                    Structure 3D pour {state.pdbId}
                                                     {selectedPdbData?.chains && ` avec chaînes: ${selectedPdbData.chains}`}
                                                 </strong>
-                                                    <ProteinViewer pdbId={localSelectedPdbId}
+                                                {state.pdbId && (<ProteinViewer pdbId={state.pdbId}
                                                                    chainId={firstChain}
                                                                    uniprotId={protein.primaryAccession}
                                                                    variants={pathogenicVariants}
-                                                                   highlightPos={showAll ? pathogenicVariants.map(v => v.begin) : selectedPositions}
-                                                                   showAll={showAll}
-                                                    />
+                                                                   highlightPos={state.showAll ? pathogenicVariants.map(v => v.begin) : state.selectedPositions}
+                                                                   showAll={state.showAll}
+                                                    />)}
 
 
                                         </>
@@ -266,7 +321,7 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                     <div>
                                         <strong>Выделенные мутации:</strong>
                                         <ul>
-                                            {(showAll ? pathogenicVariants : pathogenicVariants.filter(v => selectedPositions.includes(v.begin)))
+                                            {(state.showAll ? pathogenicVariants : pathogenicVariants.filter(v => state?.selectedPositions?.includes(v.begin)))
                                                 .map((v, idx) => (
                                                     <li key={idx}>
                                                         {v.original}{v.begin}{v.variation} — {v.mutatedType || 'n/a'} ({v.somaticStatus ? 'somatic' : 'inherited'})
@@ -319,6 +374,8 @@ const SearchResults = ({articles = [], proteins = []}) => {
                         </li>)
                 })}
             </ul>
+
+
         </div>
     )
 };
