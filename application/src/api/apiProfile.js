@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const profile = axios.get('/api/v0.1/users/profile', {
+export const profile = axios.get('/api/v0.1/users/profile/full', {
     headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`
     }

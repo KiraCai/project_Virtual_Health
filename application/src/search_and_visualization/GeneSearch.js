@@ -11,14 +11,14 @@ const GeneSearchForm = ({onResult}) => {
         //const token = sessionStorage.getItem("token");
         try {
             console.log("Recherche par demande:", query);
-            const res = await axios.get(`/api/v0.1/users/visualization?query=${query}`, {
+            const res = await axios.get(`/api/v0.1/users/visualization?query=${query}`, { timeout: 300000
                 /*headers: {
                     Authorization: `Bearer ${token}`
                 }*/
             });
-            console.log('Réponse du serveur:', res.data);
+            //console.log('Réponse du serveur:', res.data);
             console.log('Articles', res.data.articles); //res.data.proteins
-            console.log("protein", JSON.stringify(res.data.proteins, null, 2));
+            //console.log("protein", JSON.stringify(res.data.proteins, null, 2));
             onResult(res.data);
         } catch (error) {
             console.error("Erreur lors de la recherche:", error);
