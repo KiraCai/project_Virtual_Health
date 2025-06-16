@@ -16,9 +16,7 @@ const GeneSearchForm = ({onResult}) => {
                     Authorization: `Bearer ${token}`
                 }*/
             });
-            //console.log('Réponse du serveur:', res.data);
-            console.log('Articles', res.data.articles); //res.data.proteins
-            //console.log("protein", JSON.stringify(res.data.proteins, null, 2));
+            console.log('Articles', res.data.articles);
             onResult(res.data);
         } catch (error) {
             console.error("Erreur lors de la recherche:", error);
@@ -30,7 +28,7 @@ const GeneSearchForm = ({onResult}) => {
         <div>
             <input
                 type="text"
-                placeholder="Введите ген / болезнь / мутацию"
+                placeholder="Entrez le gène/la maladie/la mutation"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
@@ -220,7 +218,7 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                 <p><strong>PDB:</strong> Aucune donnée</p>
                             )}
 
-                            <h4>Патогенные мутации:</h4>
+                            <h4>Mutations pathogènes:</h4>
                             <div style={{display: "flex", flexWrap: "wrap", gap: "8px", maxWidth: "800px"}}>
                                 {pathogenicVariants.map((v, idx) => {
                                     const label = `${v.original}${v.begin}${v.variation}`;
@@ -240,22 +238,27 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                 })}
                             </div>
 
-
                             <div style={{ marginTop: "10px" }}>
                                 <button onClick={() => resetSelection(protein.primaryAccession)}>Сбросить</button>
                                 <button onClick={() => {
                                     const all = pathogenicVariants.map(v => v.begin);
                                     showAllMutations(protein.primaryAccession, pathogenicVariants);
-                                }}>Показать все</button>
-                            </div>
 
+                                }}>Tout afficher</button>
+                            </div>
 
                             {pdbIds.length > 0 && (
                                 <div>
                                     <label>Sélectionnez PDB ID:&nbsp;
                                         <select
                                             value={state.pdbId || ''}
-                                            onChange={(e) => selectPdb(protein.primaryAccession, e.target.value)}
+
+                                        onChange={(e) => {
+                                            const pdbId = e.target.value;
+
+                                            selectPdb(protein.primaryAccession, pdbId);
+                                        }}
+
                                         >
                                             <option value="">-- Choisir --</option>
                                             {pdbIds.map(id => (
@@ -273,7 +276,7 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                             const selectedPdbData = crossRefPdbIds.find(pdb => pdb.id === state.pdbId);
 
                                             if (!selectedPdbData) {
-                                                return <p>Данные для PDB ID {state.pdbId} не найдены.</p>;
+                                                return <p>Données pour PDB ID {state.pdbId} non trouvées.</p>;
                                             }
                                             const rawChain = selectedPdbData.chains;
                                             const chains = rawChain.split('=')[0].split('/');
@@ -291,24 +294,27 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                                                    highlightPos={state.showAll ? pathogenicVariants.map(v => v.begin) : state.selectedPositions}
                                                                    showAll={state.showAll}
                                                     />)}
-
-
                                         </>
                                             );
                                         })()}
 
-
                                     </div>
                                     <ul>
-                                        {proteins.map((protein, index) => (
-                                            <li key={index}>
-                                                <ProteinVisualizationWithScore protein={protein} pathogenic={pathogenicVariants} />
-                                            </li>
-                                        ))}
+                                        {selectedStates[protein.primaryAccession]?.pdbId && (
+                                            <ProteinVisualizationWithScore
+                                                key={protein.primaryAccession}
+                                                protein={{
+                                                    ...protein,
+                                                    shannonEntropy: { ...protein.shannonEntropy }
+                                                }}
+                                                pathogenic={pathogenicVariants}
+                                                state={selectedStates[protein.primaryAccession]}
+                                            />
+                                        )}
                                     </ul>
 
                                     <div>
-                                        <strong>Выделенные мутации:</strong>
+                                        <strong>Mutations mises en évidence:</strong>
                                         <ul>
                                             {(state.showAll ? pathogenicVariants : pathogenicVariants.filter(v => state?.selectedPositions?.includes(v.begin)))
                                                 .map((v, idx) => (
@@ -317,7 +323,6 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                                     </li>
                                                 ))}
                                         </ul>
-
                                     </div>
                                 </div>
                             )}

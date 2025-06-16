@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import ProteinViewer from './ProteinViewer';
-import { calculateConservationMutationCorrelationScore } from './utils';
+import React, { useState, useEffect } from 'react';
+import {
+    calculateConservationMutationCorrelationScore, calculateLinearlyWeightedPathogenicScore,
+    calculateWeightedPathogenicScore
+} from './utils';
 
 const extractPositionsByImpact = (variants, keyword) => {
     return variants
@@ -13,69 +15,83 @@ const extractPositionsByImpact = (variants, keyword) => {
 };
 
 const ProteinVisualizationWithScore = ({ protein, pathogenic }) => {
+    const emptyScore = {
+        averageAllEntropy: 0,
+        averagePathogenicEntropy: 0,
+        score: 0,
+        usedPathogenicCount: 0,
+        totalPathogenicCount: 0
+    };
+    const allPositions = (pathogenic || [])
+        .map(v => parseInt(v.begin, 10))
+        .filter(Number.isInteger);
 
-    console.log(pathogenic);
-    const allPositions = useMemo(() =>
-        (pathogenic || [])
-            .map(v => parseInt(v.begin, 10))
-            .filter(Number.isInteger), [pathogenic]
-    );
+    const moderatePositions = extractPositionsByImpact(pathogenic, 'MODERATE');
+    const highPositions = extractPositionsByImpact(pathogenic, 'HIGH');
 
-    console.log("позиции чистые для всех видов мутаций")
-    console.log(allPositions)
+    const resultAll = protein && protein.shannonEntropy
+        ? calculateConservationMutationCorrelationScore(protein.shannonEntropy, allPositions)
+        : emptyScore;
 
-    const moderatePositions = useMemo(() =>
-        extractPositionsByImpact(pathogenic, 'MODERATE'), [pathogenic]
-    );
-    console.log("позиции средних для всех видов мутаций")
-    console.log(moderatePositions)
+    const resultModerate= protein && protein.shannonEntropy
+        ? calculateConservationMutationCorrelationScore(protein.shannonEntropy, moderatePositions)
+        : emptyScore;
 
-    const highPositions = useMemo(() =>
-        extractPositionsByImpact(pathogenic, 'HIGH'), [pathogenic]
-    );
-    console.log("позиции высоких для всех видов мутаций")
-    console.log(highPositions)
+    const resultHigh = protein && protein.shannonEntropy
+        ? calculateConservationMutationCorrelationScore(protein.shannonEntropy, highPositions)
+        : emptyScore;
 
-    const resultAll = useMemo(() =>
-            calculateConservationMutationCorrelationScore(protein.shannonEntropy || {}, allPositions),
-        [protein.shannonEntropy, allPositions]
-    );
+    const resultWeighted = protein && protein.shannonEntropy
+        ? calculateWeightedPathogenicScore(protein.shannonEntropy, allPositions)
+        : emptyScore;
 
-    const resultModerate = useMemo(() =>
-            calculateConservationMutationCorrelationScore(protein.shannonEntropy || {}, moderatePositions),
-        [protein.shannonEntropy, moderatePositions]
-    );
+    const resultWeightedModerate = protein && protein.shannonEntropy
+        ? calculateWeightedPathogenicScore(protein.shannonEntropy, moderatePositions)
+        : emptyScore;
 
-    const resultHigh = useMemo(() =>
-            calculateConservationMutationCorrelationScore(protein.shannonEntropy || {}, highPositions),
-        [protein.shannonEntropy, highPositions]
-    );
-
+    const resultWeightedHigh = protein && protein.shannonEntropy
+        ? calculateWeightedPathogenicScore(protein.shannonEntropy, highPositions)
+        : emptyScore;
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <div style={boxStyle}>
-                <h4> Все патогенные мутации</h4>
+                <h4> Toutes les mutations pathogènes</h4>
                 <ScoreResult result={resultAll} />
             </div>
             <div style={boxStyle}>
-                <h4>🧪 MODERATE impact</h4>
+                <h4>Score pondéré (avec logarithme)</h4>
+                <ScoreResult result={resultWeighted} />
+            </div>
+
+            <div style={boxStyle}>
+                <h4>Mutations à influence "MODERATE"</h4>
                 <ScoreResult result={resultModerate} />
             </div>
             <div style={boxStyle}>
-                <h4>🔥 HIGH impact</h4>
+                <h4>Score pondéré pour les mutations "MODERATE"</h4>
+                <ScoreResult result={resultWeightedModerate} />
+            </div>
+            <div style={boxStyle}>
+                <h4>Mutations à influence "HIGH"</h4>
                 <ScoreResult result={resultHigh} />
             </div>
+            <div style={boxStyle}>
+                <h4>Score pondéré pour les mutations "HIGH"</h4>
+                <ScoreResult result={resultWeightedHigh} />
+            </div>
+
+
         </div>
     );
 };
 
 const ScoreResult = ({ result }) => (
     <>
-        <p><strong>Средняя энтропия (всего):</strong> {result.averageAllEntropy.toFixed(3)}</p>
-        <p><strong>Средняя энтропия (патогенные):</strong> {result.averagePathogenicEntropy.toFixed(3)}</p>
-        <p><strong>Скор (разница):</strong> {result.score.toFixed(3)}</p>
-        <p><small>Мутаций учтено: {result.usedPathogenicCount} из {result.totalPathogenicCount}</small></p>
+        <p><strong>Entropie moyenne (totale): </strong> {result.averageAllEntropy.toFixed(3)}</p>
+        <p><strong>Entropie moyenne (pathogène): </strong> {result.averagePathogenicEntropy.toFixed(3)}</p>
+        <p><strong>Score (différence): </strong> {result.score.toFixed(3)}</p>
+        <p><small>Mutations prises en compte: {result.usedPathogenicCount} из {result.totalPathogenicCount}</small></p>
     </>
 );
 
@@ -84,7 +100,10 @@ const boxStyle = {
     borderRadius: '8px',
     padding: '1rem',
     backgroundColor: '#f9f9f9',
-    maxWidth: '500px'
+    width: '50%'
 };
 
 export default ProteinVisualizationWithScore;
+
+
+
