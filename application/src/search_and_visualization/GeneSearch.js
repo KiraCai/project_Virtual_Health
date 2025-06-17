@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import ProteinViewer from './ProteinViewer';
-import { calculateConservationMutationCorrelationScore } from './utils';
 import ProteinVisualizationWithScore from "./ProteinVisualizationWithScore";
 
 const GeneSearchForm = ({onResult}) => {
@@ -11,28 +10,27 @@ const GeneSearchForm = ({onResult}) => {
         //const token = sessionStorage.getItem("token");
         try {
             console.log("Recherche par demande:", query);
-            const res = await axios.get(`/api/v0.1/users/visualization?query=${query}`, { timeout: 300000
+            const res = await axios.get(`/api/v0.1/users/visualization?query=${query}`, {
+                timeout: 300000
                 /*headers: {
                     Authorization: `Bearer ${token}`
                 }*/
             });
-            console.log('Articles', res.data.articles);
             onResult(res.data);
         } catch (error) {
-            console.error("Erreur lors de la recherche:", error);
             alert("Erreur. Veuillez recharger la page..");
         }
     };
 
     return (
-        <div>
+        <div className="searchProt fat">
             <input
                 type="text"
                 placeholder="Entrez le gène/la maladie/la mutation"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
-            <button onClick={handleSearch}>Поиск</button>
+            <button className="btn buttonStyleDark fat" onClick={handleSearch}>Recherche</button>
         </div>
     );
 };
@@ -42,7 +40,7 @@ const SearchResults = ({articles = [], proteins = []}) => {
 
     const toggleHighlight = (accession, pos) => {
         setSelectedStates(prev => {
-            const current = prev[accession] || { };
+            const current = prev[accession] || {};
             const selected = Array.isArray(current.selectedPositions)
                 ? current.selectedPositions
                 : [];
@@ -51,7 +49,7 @@ const SearchResults = ({articles = [], proteins = []}) => {
                 : [...selected, pos];
             return {
                 ...prev,
-                [accession]: { ...current, selectedPositions: newPositions, pdbId: current.pdbId || "", showAll: false }
+                [accession]: {...current, selectedPositions: newPositions, pdbId: current.pdbId || "", showAll: false}
             };
         });
     };
@@ -59,14 +57,14 @@ const SearchResults = ({articles = [], proteins = []}) => {
     const selectPdb = (accession, pdbId) => {
         setSelectedStates(prev => ({
             ...prev,
-            [accession]: { ...(prev[accession] || {}), pdbId }
+            [accession]: {...(prev[accession] || {}), pdbId}
         }));
     };
 
     const resetSelection = (accession) => {
         setSelectedStates(prev => ({
             ...prev,
-            [accession]: { ...(prev[accession] || {}), selectedPositions: [], showAll: false }
+            [accession]: {...(prev[accession] || {}), selectedPositions: [], showAll: false}
         }));
     };
 
@@ -84,25 +82,27 @@ const SearchResults = ({articles = [], proteins = []}) => {
 
     return (
 
-        <div>
-            <h3>Articles:</h3>
+        <div className="blocProt">
+            <div className="linesNote buttonStyleDark">Articles:</div>
             <ul>
                 {articles.map((article, index) => (
                     <li key={index}>
-                        <a href={article.url} target="_blank" rel="noopener noreferrer">
+                        <a className="infoNote fat" href={article.url} target="_blank" rel="noopener noreferrer">
                             {article.title}
                         </a>
-                        <p><strong>Résumé :</strong> {article.abstractText || "Pas de résumé disponible."}</p>
-                        <p><strong>Auteurs
-                            :</strong> {Array.isArray(article.authors) ? article.authors.join(', ') : "Aucun auteur listé"}
-                        </p>
-                        <p><strong>Journal :</strong> {article.journal || "Non spécifié"}</p>
-                        <p><strong>PMID :</strong> {article.pmid}</p>
+                        <div className="infoNote">
+                            <p><strong>Résumé :</strong> {article.abstractText || "Pas de résumé disponible."}</p>
+                            <p><strong>Auteurs
+                                :</strong> {Array.isArray(article.authors) ? article.authors.join(', ') : "Aucun auteur listé"}
+                            </p>
+                            <p><strong>Journal :</strong> {article.journal || "Non spécifié"}</p>
+                            <p><strong>PMID :</strong> {article.pmid}</p>
+                        </div>
                     </li>
                 ))}
             </ul>
 
-            <h3>Protéines:</h3>
+            <div className="linesNote buttonStyleDark">Protéines:</div>
             <ul>
                 {proteins.map((protein, index) => {
 
@@ -135,53 +135,54 @@ const SearchResults = ({articles = [], proteins = []}) => {
                     };
                     return (
                         <li key={index}>
+
                             {protein.primaryAccession} - <a
+                            className="infoNote fat"
                             href={`https://www.uniprot.org/uniprot/${protein.primaryAccession}`}
                             target="_blank" rel="noopener noreferrer">Lien vers Uniprot avec une
                             description complète de la protéine {protein.primaryAccession}</a>
-                            <p>
-                                Identifiant unique principal de protéine dans la base de données
-                                UniProt: {protein.uniProtkbId}
-                            </p>
+                            <div>
+                                <strong>Identifiant unique principal de protéine dans la base de données
+                                UniProt:</strong> {protein.uniProtkbId}
+                            </div>
 
-                            <p>
-                                Liste des identifiants alternatifs: {Array.isArray(protein.secondaryAccessions)
+                            <div>
+                                <strong>Liste des identifiants alternatifs:</strong> {Array.isArray(protein.secondaryAccessions)
                                 ? protein.secondaryAccessions.join(', ')
                                 : "Aucune donnée"}
-                            </p>
+                            </div>
 
-                            <p>
-                                Score d'annotation (indique dans quelle mesure la protéine est décrite. 5 est le
-                                maximum,
-                                beaucoup de données vérifiées): {protein.annotationScore}
-                            </p>
+                            <div>
+                                <strong>Score d'annotation (indique dans quelle mesure la protéine est décrite. 5 est le
+                                maximum,                                beaucoup de données vérifiées):</strong> {protein.annotationScore}
+                            </div>
 
-                            <p>
-                                Lineage: {protein.organism?.lineage?.join(' > ')}
-                            </p>
+                            <div>
+                                <strong>Lineage:</strong> {protein.organism?.lineage?.join(' > ')}
+                            </div>
 
-                            <p>
-                                Organism: {protein.organism?.scientificName} ({protein.organism?.commonName})
-                            </p>
+                            <div>
+                                <strong>Organism:</strong> {protein.organism?.scientificName} ({protein.organism?.commonName})
+                            </div>
 
-                            <p>
-                                Niveau de preuve de l’existence des protéines: {protein.proteinExistence}
-                            </p>
+                            <div>
+                                <strong>Niveau de preuve de l’existence des protéines:</strong> {protein.proteinExistence}
+                            </div>
 
-                            <p>
-                                Noms alternatifs pour les
-                                protéines: {
+                            <div>
+                                <strong>Noms alternatifs pour les
+                                protéines:</strong> {
                                 Array.isArray(protein.proteinDescription?.alternativeNames)
                                     ? protein.proteinDescription.alternativeNames
                                         .map(name => name.fullName?.value)
                                         .filter(Boolean)
                                         .join(', ') : "Aucune donnée"
                             }
-                            </p>
+                            </div>
 
-                            <p>
-                                Le nom du gène codant pour cette protéine est: {protein.genes?.geneName?.value}
-                            </p>
+                            <div>
+                                <strong>Le nom du gène codant pour cette protéine est:</strong> {protein.genes?.geneName?.value}
+                            </div>
 
                             <div>
                                 <strong>Séquence d'acides aminés:</strong>
@@ -193,7 +194,7 @@ const SearchResults = ({articles = [], proteins = []}) => {
                             {crossRefPdbIds.length > 0 ? (
                                 <div>
                                     <strong>Structures PDB (из UniProt):</strong>
-                                    <table border="1" cellPadding="5" style={{ marginTop: "10px", borderCollapse: "collapse" }}>
+                                    <table className="tableProtChain" border="1" cellPadding="5">
                                         <thead>
                                         <tr>
                                             <th>PDB ID</th>
@@ -219,46 +220,44 @@ const SearchResults = ({articles = [], proteins = []}) => {
                             )}
 
                             <h4>Mutations pathogènes:</h4>
-                            <div style={{display: "flex", flexWrap: "wrap", gap: "8px", maxWidth: "800px"}}>
+                            <div className="wrapMutation tableProt">
                                 {pathogenicVariants.map((v, idx) => {
+                                    const position = !v.end || v.begin === v.end ? `${v.begin}` : `${v.begin}–${v.end}`;
                                     const label = `${v.original}${v.begin}${v.variation}`;
-                                    const tooltip = `Позиция: ${v.begin}, ${v.original} → ${v.variation} (${v.mutatedType || 'n/a'}), ${v.somaticStatus ? 'somatic' : 'inherited'}`;
+                                    const tooltip = `Position: ${v.begin}, ${v.original} → ${v.variation} (${v.mutatedType || 'n/a'}), ${v.somaticStatus ? 'somatic' : 'inherited'}`;
                                     const isSelected = state?.selectedPositions?.includes(v.begin);
+
                                     return (
-                                        <div key={idx} style={{
-                                            border: "1px solid gray",
-                                            borderRadius: "8px",
-                                            padding: "6px 10px",
-                                            backgroundColor: state?.selectedPositions?.includes(v.begin) ? "#ffcccc" : "#f9f9f9",
-                                            cursor: "pointer"
-                                        }} title={v.description || "pathogenic mutation"}
+                                        <div key={idx}
+                                             style={{
+                                                 backgroundColor: state?.selectedPositions?.includes(v.begin) ? "#ffcccc" : "#f9f9f9",
+                                             }} className="boxMutation" title={v.description || tooltip}
                                              onClick={() => toggleHighlight(protein.primaryAccession, v.begin)}>
-                                            {v.begin} — {v.original}{v.begin}{v.variation}
+                                            {position}
                                         </div>)
                                 })}
                             </div>
 
-                            <div style={{ marginTop: "10px" }}>
-                                <button onClick={() => resetSelection(protein.primaryAccession)}>Сбросить</button>
-                                <button onClick={() => {
+                            <div className="btnWrapProt tableProt">
+                                <button className="btn buttonStyleDark fat" onClick={() => resetSelection(protein.primaryAccession)}>Vider</button>
+                                <button className="btn buttonStyleDark fat" onClick={() => {
                                     const all = pathogenicVariants.map(v => v.begin);
                                     showAllMutations(protein.primaryAccession, pathogenicVariants);
-
-                                }}>Tout afficher</button>
+                                }}>Tout afficher
+                                </button>
                             </div>
 
                             {pdbIds.length > 0 && (
-                                <div>
+                                <div className="tableProt">
                                     <label>Sélectionnez PDB ID:&nbsp;
-                                        <select
+                                        <select className="selectProt"
                                             value={state.pdbId || ''}
 
-                                        onChange={(e) => {
-                                            const pdbId = e.target.value;
+                                            onChange={(e) => {
+                                                const pdbId = e.target.value;
 
-                                            selectPdb(protein.primaryAccession, pdbId);
-                                        }}
-
+                                                selectPdb(protein.primaryAccession, pdbId);
+                                            }}
                                         >
                                             <option value="">-- Choisir --</option>
                                             {pdbIds.map(id => (
@@ -282,66 +281,71 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                             const chains = rawChain.split('=')[0].split('/');
                                             const firstChain = chains[0];
                                             return (
-                                                <>
-                                                <strong>
-                                                    Structure 3D pour {state.pdbId}
-                                                    {selectedPdbData?.chains && ` avec chaînes: ${selectedPdbData.chains}`}
-                                                </strong>
-                                                {state.pdbId && (<ProteinViewer pdbId={state.pdbId}
-                                                                   chainId={firstChain}
-                                                                   uniprotId={protein.primaryAccession}
-                                                                   variants={pathogenicVariants}
-                                                                   highlightPos={state.showAll ? pathogenicVariants.map(v => v.begin) : state.selectedPositions}
-                                                                   showAll={state.showAll}
-                                                    />)}
-                                        </>
+                                                <div className="viewProt">
+                                                    <div>
+                                                        <strong>
+                                                            Structure 3D pour {state.pdbId}
+                                                            {selectedPdbData?.chains && ` avec chaînes: ${selectedPdbData.chains}`}
+                                                        </strong>
+                                                        {state.pdbId && (<ProteinViewer pdbId={state.pdbId}
+                                                                                        chainId={firstChain}
+                                                                                        uniprotId={protein.primaryAccession}
+                                                                                        variants={pathogenicVariants}
+                                                                                        highlightPos={state.showAll ? pathogenicVariants.map(v => v.begin) : state.selectedPositions}
+                                                                                        showAll={state.showAll}
+                                                        />)}
+                                                    </div>
+                                                    <div className="boxProtScore">
+                                                        {selectedStates[protein.primaryAccession]?.pdbId && (
+                                                            <ProteinVisualizationWithScore
+                                                                key={protein.primaryAccession}
+                                                                protein={{
+                                                                    ...protein,
+                                                                    shannonEntropy: {...protein.shannonEntropy}
+                                                                }}
+                                                                pathogenic={pathogenicVariants}
+                                                                state={selectedStates[protein.primaryAccession]}
+                                                            />
+                                                        )}
+                                                    </div>
+
+                                                </div>
                                             );
                                         })()}
 
                                     </div>
-                                    <ul>
-                                        {selectedStates[protein.primaryAccession]?.pdbId && (
-                                            <ProteinVisualizationWithScore
-                                                key={protein.primaryAccession}
-                                                protein={{
-                                                    ...protein,
-                                                    shannonEntropy: { ...protein.shannonEntropy }
-                                                }}
-                                                pathogenic={pathogenicVariants}
-                                                state={selectedStates[protein.primaryAccession]}
-                                            />
-                                        )}
-                                    </ul>
 
-                                    <div>
-                                        <strong>Mutations mises en évidence:</strong>
-                                        <ul>
-                                            {(state.showAll ? pathogenicVariants : pathogenicVariants.filter(v => state?.selectedPositions?.includes(v.begin)))
-                                                .map((v, idx) => (
-                                                    <li key={idx}>
-                                                        {v.original}{v.begin}{v.variation} — {v.mutatedType || 'n/a'} ({v.somaticStatus ? 'somatic' : 'inherited'})
-                                                    </li>
-                                                ))}
-                                        </ul>
-                                    </div>
                                 </div>
                             )}
 
-                            <p>
+                            <div>
+                                <strong>Mutations mises en évidence:</strong>
+                                <ul>
+                                    {(state.showAll ? pathogenicVariants : pathogenicVariants.filter(v => state?.selectedPositions?.includes(v.begin)))
+                                        .map((v, idx) => (
+                                            <li key={idx}>
+                                                {v.original}{v.begin}{v.variation} — {v.mutatedType || 'n/a'} ({v.somaticStatus ? 'somatic' : 'inherited'})
+                                            </li>
+                                        ))}
+                                </ul>
+                            </div>
+
+
+                            <div>
                                 <strong>Fonctions des protéines:</strong>{" "}
                                 {
                                     protein.comments?.find(c => c.commentType === "FUNCTION")
                                         ?.texts?.[0]?.value || "Aucune donnée"
                                 }
-                            </p>
+                            </div>
 
-                            <p>
+                            <div>
                                 <strong>Expression:</strong>{" "}
                                 {
                                     protein.comments?.find(c => c.commentType === "TISSUE SPECIFICITY")
                                         ?.texts?.[0]?.value || "Aucune donnée"
                                 }
-                            </p>
+                            </div>
 
                             <div>
                                 <strong>Maladies apparentées:</strong>
@@ -357,7 +361,7 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                                 <p>{c.disease?.description}</p>
                                                 {c.disease?.diseaseCrossReference && (
                                                     <p>
-                                                        Ссылка: {c.disease.diseaseCrossReference.database} —{" "}
+                                                        Lien: {c.disease.diseaseCrossReference.database} —{" "}
                                                         {c.disease.diseaseCrossReference.id}
                                                     </p>
                                                 )}
@@ -382,13 +386,15 @@ const GeneSearch = () => {
     };
 
     return (
-        <div>
+        <main className="thin">
+            <div className="testTitle fat">Analyser une maladie, un gène ou une protéine.
+            </div>
             <GeneSearchForm onResult={handleResult}/>
             {results && <SearchResults
                 articles={results.articles || []}
                 proteins={results.proteins || []}
             />}
-        </div>
+        </main>
     );
 };
 

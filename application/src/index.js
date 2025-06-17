@@ -22,7 +22,8 @@ import '../style/personal/Search.css';
 import '../style/personal/Result.css';
 import '../style/personal/chooseDoc.css';
 import '../style/personal/personalAcc.css';
-import '../style/disease/disease.css'
+import '../style/disease/disease.css';
+import '../style/protein.css'
 
 const div = document.createElement('div');
 div.setAttribute('id', 'app');

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     calculateConservationMutationCorrelationScore, calculateLinearlyWeightedPathogenicScore,
     calculateWeightedPathogenicScore
@@ -14,7 +14,7 @@ const extractPositionsByImpact = (variants, keyword) => {
         .filter(Number.isInteger);
 };
 
-const ProteinVisualizationWithScore = ({ protein, pathogenic }) => {
+const ProteinVisualizationWithScore = ({protein, pathogenic}) => {
     const emptyScore = {
         averageAllEntropy: 0,
         averagePathogenicEntropy: 0,
@@ -33,7 +33,7 @@ const ProteinVisualizationWithScore = ({ protein, pathogenic }) => {
         ? calculateConservationMutationCorrelationScore(protein.shannonEntropy, allPositions)
         : emptyScore;
 
-    const resultModerate= protein && protein.shannonEntropy
+    const resultModerate = protein && protein.shannonEntropy
         ? calculateConservationMutationCorrelationScore(protein.shannonEntropy, moderatePositions)
         : emptyScore;
 
@@ -54,31 +54,31 @@ const ProteinVisualizationWithScore = ({ protein, pathogenic }) => {
         : emptyScore;
 
     return (
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={boxStyle}>
+        <div className="resultScore">
+            <div className="blocScore thin btn buttonStyleDark">
                 <h4> Toutes les mutations pathogènes</h4>
-                <ScoreResult result={resultAll} />
+                <ScoreResult result={resultAll}/>
             </div>
-            <div style={boxStyle}>
+            <div className="blocScore thin btn buttonStyleDark">
                 <h4>Score pondéré (avec logarithme)</h4>
-                <ScoreResult result={resultWeighted} />
+                <ScoreResult result={resultWeighted}/>
             </div>
 
-            <div style={boxStyle}>
+            <div className="blocScore thin btn buttonStyleDark">
                 <h4>Mutations à influence "MODERATE"</h4>
-                <ScoreResult result={resultModerate} />
+                <ScoreResult result={resultModerate}/>
             </div>
-            <div style={boxStyle}>
-                <h4>Score pondéré pour les mutations "MODERATE"</h4>
-                <ScoreResult result={resultWeightedModerate} />
+            <div className="blocScore thin btn buttonStyleDark">
+                <h4>Score pondéré pour "MODERATE"</h4>
+                <ScoreResult result={resultWeightedModerate}/>
             </div>
-            <div style={boxStyle}>
-                <h4>Mutations à influence "HIGH"</h4>
-                <ScoreResult result={resultHigh} />
+            <div className="blocScore thin btn buttonStyleDark">
+                <h4>Mutations à influence pour "HIGH"</h4>
+                <ScoreResult result={resultHigh}/>
             </div>
-            <div style={boxStyle}>
-                <h4>Score pondéré pour les mutations "HIGH"</h4>
-                <ScoreResult result={resultWeightedHigh} />
+            <div className="blocScore thin btn buttonStyleDark">
+                <h4>Score pondéré pour "HIGH"</h4>
+                <ScoreResult result={resultWeightedHigh}/>
             </div>
 
 
@@ -86,22 +86,14 @@ const ProteinVisualizationWithScore = ({ protein, pathogenic }) => {
     );
 };
 
-const ScoreResult = ({ result }) => (
-    <>
+const ScoreResult = ({result}) => (
+    <div>
         <p><strong>Entropie moyenne (totale): </strong> {result.averageAllEntropy.toFixed(3)}</p>
         <p><strong>Entropie moyenne (pathogène): </strong> {result.averagePathogenicEntropy.toFixed(3)}</p>
         <p><strong>Score (différence): </strong> {result.score.toFixed(3)}</p>
         <p><small>Mutations prises en compte: {result.usedPathogenicCount} из {result.totalPathogenicCount}</small></p>
-    </>
+    </div>
 );
-
-const boxStyle = {
-    border: '1px solid #ccc',
-    borderRadius: '8px',
-    padding: '1rem',
-    backgroundColor: '#f9f9f9',
-    width: '50%'
-};
 
 export default ProteinVisualizationWithScore;
 

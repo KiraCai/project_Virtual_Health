@@ -1,0 +1,126 @@
+.picProt {
+	width: 600px;
+	height: 600px;
+	border: 1px solid #ccc;
+	margin: 10px;
+}
+
+.searchProt {
+	display: inline-block;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+	gap: 8px;
+	color: black;
+	transition: 0.3s ease-in;
+	height: 300px;
+}
+.searchProt * {
+	height: 51px;
+	font-size: 25px;
+}
+
+.wrapMutation {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	max-width: 1200px;
+}
+
+.boxMutation {
+	border: 1px solid gray;
+	border-radius: 8px;
+	padding: 6px 10px;
+	cursor: pointer;
+}
+
+.btnWrapProt {
+	display: flex;
+	gap: 30px;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+}
+
+.btnWrapProt button {
+	height: 51px;
+	font-size: 25px;
+}
+
+.resultScore {
+	display: grid;
+	grid-gap: 15px;
+	grid-template-columns: repeat(2, auto);
+	margin-top: 15px;
+	justify-content: center;
+	max-width: 800px;
+}
+
+.blocScore {
+	border-radius: 8px;
+	width: 90%;
+	font-size: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+	padding: 5px;
+	margin: 15px;
+}
+.blocScore * {
+	margin: 10px;
+}
+.atom{
+	max-width: 200px;
+}
+
+.blocProt {
+	font-size: 25px;
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	justify-content: start;
+	text-align: start;
+	gap: 30px;
+	padding-left: 100px;
+	padding-right: 100px;
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+.tableProtChain{
+	margin-top: 10px;
+	border-collapse: collapse;
+	width: auto;
+	max-width: 100%;
+	border: 1px solid #999;
+}
+.tableProtChain th,
+.tableProtChain td {
+	border: 1px solid #ccc;
+	padding: 8px;
+	text-align: left;
+}
+
+.tableProtChain th {
+	background-color: #f2f2f2;
+}
+.tableProtChain-wrapper {
+	display: flex;
+	justify-content: center;
+	margin: 20px 0;
+}
+
+.selectProt {
+	height: 51px;
+	font-size: 25px;
+}
+
+.viewProt{
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+
+}
