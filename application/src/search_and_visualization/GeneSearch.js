@@ -322,11 +322,40 @@ const SearchResults = ({articles = [], proteins = []}) => {
                                 <strong>Mutations mises en évidence:</strong>
                                 <ul>
                                     {(state.showAll ? pathogenicVariants : pathogenicVariants.filter(v => state?.selectedPositions?.includes(v.begin)))
-                                        .map((v, idx) => (
-                                            <li key={idx}>
-                                                {v.original}{v.begin}{v.variation} — {v.mutatedType || 'n/a'} ({v.somaticStatus ? 'somatic' : 'inherited'})
-                                            </li>
-                                        ))}
+                                        .map((v, idx) => {
+                                            console.log('Variant object:', v);
+                                            return(
+                                                <>
+                                                <li key={idx} style={{ marginBottom: '1rem' }}>
+                                                <div>
+                                            {v.original} {v.begin + ' - position '} {v.wildType} —> {v.mutatedType || 'n/a'} ({v.somaticStatus ? 'somatic' : 'inherited'})
+                                            </div>
+
+                                            {v.association?.length > 0 ? (
+                                                <table style={{ borderCollapse: 'collapse', marginTop: '0.5rem', width: '100%', fontSize: '0.9rem' }}>
+                                                    <thead>
+                                                    <tr>
+                                                        <th style={{ border: '1px solid #ccc', padding: '4px' }}>Maladie</th>
+                                                        <th style={{ border: '1px solid #ccc', padding: '4px' }}>Description</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {v.association.map((a, i) => (
+                                                        <tr key={i}>
+                                                            <td style={{ border: '1px solid #ccc', padding: '4px', fontWeight: 'bold' }}>{a.name}</td>
+                                                            <td style={{ border: '1px solid #ccc', padding: '4px' }}>
+                                                                {a.description || <em style={{ color: '#888' }}>La description est manquante</em>}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                    </tbody>
+                                                </table>
+                                            ) : (
+                                                <div style={{ fontStyle: 'italic', color: '#666' }}>Aucune donnée sur les maladies</div>
+                                            )}
+                                        </li>
+                                                </>)
+                                        })}
                                 </ul>
                             </div>
 

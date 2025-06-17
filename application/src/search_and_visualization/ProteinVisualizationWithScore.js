@@ -91,7 +91,7 @@ const ScoreResult = ({result}) => (
         <p><strong>Entropie moyenne (totale): </strong> {result.averageAllEntropy.toFixed(3)}</p>
         <p><strong>Entropie moyenne (pathogène): </strong> {result.averagePathogenicEntropy.toFixed(3)}</p>
         <p><strong>Score (différence): </strong> {result.score.toFixed(3)}</p>
-        <p><small>Mutations prises en compte: {result.usedPathogenicCount} из {result.totalPathogenicCount}</small></p>
+        <p><small>Mutations prises en compte: {result.usedPathogenicCount} sur {result.totalPathogenicCount}</small></p>
     </div>
 );
 
